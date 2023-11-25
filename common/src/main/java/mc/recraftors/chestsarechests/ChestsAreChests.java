@@ -2,13 +2,26 @@ package mc.recraftors.chestsarechests;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.GameRules;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Contract;
 
 public class ChestsAreChests {
 	public static final String MOD_ID = "chests_are_chests";
+	public static final String BARREL_FALL_RULE_ID = "chests.barrelFall";
 	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
+	private static GameRules.Key<GameRules.BooleanRule> barrelFall;
+
+	public static GameRules.Key<GameRules.BooleanRule> getBarrelFall() {
+		return barrelFall;
+	}
+
+	public static void setBarrelFall(GameRules.Key<GameRules.BooleanRule> ruleKey) {
+		if (barrelFall == null) {
+			barrelFall = ruleKey;
+		}
+	}
 
 	public static void init() {
 	}
