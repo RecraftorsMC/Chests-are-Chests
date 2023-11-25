@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "chests_are_chests",
+  "version": "${version}",
+  "name": "chests are chests",
+  "description": "Allows items to fall into open containers",
+  "authors": [
+    {
+      "name": "Recraftors Team",
+      "role": "owner",
+      "contact": {
+        "homepage": "https://"
+      }
+    }
+  ],
+  "contact": {},
+  "license": "GNU GPL 3.0",
+  "icon": "icon.png",
+  "environment": "*",
+  "entrypoints": {},
+  "mixins": [
+    "chests_are_chests.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.20",
+    "minecraft": ">=1.19"
+  }
+}
