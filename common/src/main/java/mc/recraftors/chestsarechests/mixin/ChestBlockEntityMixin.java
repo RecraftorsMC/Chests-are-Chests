@@ -1,7 +1,6 @@
 package mc.recraftors.chestsarechests.mixin;
 
 import mc.recraftors.chestsarechests.BooleanProvider;
-import mc.recraftors.chestsarechests.ChestsAreChests;
 import mc.recraftors.chestsarechests.FallInContainer;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.*;
@@ -37,37 +36,9 @@ public abstract class ChestBlockEntityMixin extends LootableContainerBlockEntity
         return ((BooleanProvider)this.lidAnimator).chests$getBool();
     }
 
-    @SuppressWarnings("DuplicatedCode")
     @Override
-    public boolean chests$tryInsertion(ItemEntity entity, BlockState state, BlockEntity block) {
-        ItemStack stack = entity.getStack().copy();
-        int size = this.size();
-        boolean success = false;
+    public boolean chests$tryInsertion(ItemEntity entity) {
         this.checkLootInteraction(null);
-        DefaultedList<ItemStack> inv = getInvStackList();
-        for (int t = 0; t < size && !stack.isEmpty(); t++) {
-            ItemStack tStack = inv.get(t);
-            if (tStack.isEmpty()) {
-                setStack(t, stack);
-                stack = ItemStack.EMPTY;
-                success = true;
-            } else if (ChestsAreChests.canMergeItems(stack, tStack)) {
-                int capability = stack.getMaxCount() - tStack.getCount();
-                int amount = Math.min(stack.getCount(), capability);
-                if (amount > 0) {
-                    stack.decrement(amount);
-                    tStack.decrement(amount);
-                    success = true;
-                }
-            }
-        }
-        if (success) {
-            if (stack.isEmpty()) {
-                entity.discard();
-            } else {
-                entity.setStack(stack);
-            }
-        }
-        return success;
+        return FallInContainer.chests$inventoryInsertion(getInvStackList(), entity, this::setStack);
     }
 }

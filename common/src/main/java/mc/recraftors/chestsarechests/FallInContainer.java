@@ -2,16 +2,17 @@ package mc.recraftors.chestsarechests;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.World;
 
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 public interface FallInContainer {
     VoxelShape EMPTY = Block.createCuboidShape(0, 0, 0, 0, 0, 0);
@@ -35,16 +36,15 @@ public interface FallInContainer {
             Direction.NORTH, VoxelShapes.union(INSIDE, BESIDE_NEGATIVE_Z)
     );
 
-    default boolean chests$fallIn(World world, BlockPos pos, BlockState state, ItemEntity entity,
-                               BlockEntity blockEntity) {
+    default boolean chests$fallIn(BlockPos pos, BlockState state, ItemEntity entity) {
         if (!state.hasBlockEntity() || !chests$isOpen()) return false;
         if (VoxelShapes.matchesAnywhere(VoxelShapes.cuboid(entity.getBoundingBox().offset(-pos.getX(), -pos.getY(), -pos.getZ())), chests$InputAreaShape(), BooleanBiFunction.AND)) {
-            return chests$tryInsertion(entity, state, blockEntity);
+            return chests$tryInsertion(entity);
         }
         return false;
     }
 
-    default boolean chests$tryInsertion(ItemEntity entity, BlockState state, BlockEntity block) {
+    default boolean chests$tryInsertion(ItemEntity entity) {
         return false;
     }
 
@@ -54,5 +54,35 @@ public interface FallInContainer {
 
     default VoxelShape chests$InputAreaShape() {
         return EMPTY;
+    }
+
+    static boolean chests$inventoryInsertion(DefaultedList<ItemStack> inv, ItemEntity item, BiConsumer<Integer, ItemStack> setStack) {
+        ItemStack stack = item.getStack().copy();
+        int size = inv.size();
+        boolean success = false;
+        for (int t = 0; t < size && !stack.isEmpty(); t++) {
+            ItemStack target = inv.get(t);
+            if (target.isEmpty()) {
+                setStack.accept(t, stack);
+                stack = ItemStack.EMPTY;
+                success = true;
+            } else if (ChestsAreChests.canMergeItems(stack, target)) {
+                int capability = stack.getMaxCount() - target.getCount();
+                int amount = Math.min(stack.getCount(), capability);
+                if (amount > 0) {
+                    stack.decrement(amount);
+                    target.increment(amount);
+                    success = true;
+                }
+            }
+        }
+        if (success) {
+            if (stack.isEmpty()) {
+                item.discard();
+            } else {
+                item.setStack(stack);
+            }
+        }
+        return success;
     }
 }

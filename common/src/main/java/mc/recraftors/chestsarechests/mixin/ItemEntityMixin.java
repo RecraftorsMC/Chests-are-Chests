@@ -26,12 +26,12 @@ public abstract class ItemEntityMixin extends Entity {
         BlockPos pos = new BlockPos(getX(), getY()-.5, getZ());
         BlockState state = world.getBlockState(pos);
         if (state.hasBlockEntity() && world.getBlockEntity(pos) instanceof FallInContainer container) {
-            consumed = container.chests$fallIn(world, pos, state, item, world.getBlockEntity(pos));
+            consumed = container.chests$fallIn(pos, state, item);
         }
         pos = new BlockPos(getX(), getY()+.5, getZ());
         state = world.getBlockState(pos);
         if (state.hasBlockEntity() && world.getBlockEntity(pos) instanceof FallInContainer container) {
-            consumed = container.chests$fallIn(world, pos, state, item, world.getBlockEntity(pos));
+            consumed = container.chests$fallIn(pos, state, item);
         }
         if (consumed) return;
         // proximity to block side bounds comparison -> dx < dz => try insert on X first
@@ -43,14 +43,14 @@ public abstract class ItemEntityMixin extends Entity {
             pos = new BlockPos(getX() + .5, getY(), getZ());
             state = world.getBlockState(pos);
             if (state.hasBlockEntity() && world.getBlockEntity(pos) instanceof FallInContainer container) {
-                consumed = container.chests$fallIn(world, pos, state, item, world.getBlockEntity(pos));
+                consumed = container.chests$fallIn(pos, state, item);
             }
             if (consumed) return;
             //noinspection DuplicatedCode
             pos = new BlockPos(getX() - .5, getY(), getZ());
             state = world.getBlockState(pos);
             if (state.hasBlockEntity() && world.getBlockEntity(pos) instanceof FallInContainer container) {
-                consumed = container.chests$fallIn(world, pos, state, item, world.getBlockEntity(pos));
+                consumed = container.chests$fallIn(pos, state, item);
             }
             if (consumed) return;
         }
@@ -58,14 +58,14 @@ public abstract class ItemEntityMixin extends Entity {
         //noinspection DuplicatedCode
         state = world.getBlockState(pos);
         if (state.hasBlockEntity() && world.getBlockEntity(pos) instanceof FallInContainer container) {
-            consumed = container.chests$fallIn(world, pos, state, item, world.getBlockEntity(pos));
+            consumed = container.chests$fallIn(pos, state, item);
         }
         if (consumed) return;
         pos = new BlockPos(getX(), getY(), getZ() - .5);
         //noinspection DuplicatedCode
         state = world.getBlockState(pos);
         if (state.hasBlockEntity() && world.getBlockEntity(pos) instanceof FallInContainer container) {
-            consumed = container.chests$fallIn(world, pos, state, item, world.getBlockEntity(pos));
+            consumed = container.chests$fallIn(pos, state, item);
         }
         if (consumed) return;
         if (!axis) {
@@ -73,14 +73,14 @@ public abstract class ItemEntityMixin extends Entity {
             pos = new BlockPos(getX() + .5, getY(), getZ());
             state = world.getBlockState(pos);
             if (state.hasBlockEntity() && world.getBlockEntity(pos) instanceof FallInContainer container) {
-                consumed = container.chests$fallIn(world, pos, state, item, world.getBlockEntity(pos));
+                consumed = container.chests$fallIn(pos, state, item);
             }
             if (consumed) return;
             //noinspection DuplicatedCode
             pos = new BlockPos(getX() - .5, getY(), getZ());
             state = world.getBlockState(pos);
             if (state.hasBlockEntity() && world.getBlockEntity(pos) instanceof FallInContainer container) {
-                container.chests$fallIn(world, pos, state, item, world.getBlockEntity(pos));
+                container.chests$fallIn(pos, state, item);
             }
         }
     }
