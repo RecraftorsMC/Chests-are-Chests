@@ -9,11 +9,21 @@
       "name": "Recraftors Team",
       "role": "owner",
       "contact": {
-        "homepage": "https://"
+        "homepage": "https://github.com/RecraftorsMC"
+      }
+    },
+    {
+      "name": "Nerjal Nosk",
+      "role": "developer",
+      "contact": {
+        "homepage": "https://github.com/NerjalNosk"
       }
     }
   ],
-  "contact": {},
+  "contact": {
+    "sources": "https://github.com/RecraftorsMC/Chests-are-Chests",
+    "issues": "https://github.com/RecraftorsMC/Chests-are-Chests/issues"
+  },
   "license": "GNU GPL 3.0",
   "icon": "icon.png",
   "environment": "*",
@@ -23,6 +33,6 @@
   ],
   "depends": {
     "fabricloader": ">=0.14.20",
-    "minecraft": ">=1.19"
+    "minecraft": ">=1.19 <1.19.3-"
   }
 }
