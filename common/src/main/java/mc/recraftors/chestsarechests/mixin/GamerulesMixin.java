@@ -18,5 +18,6 @@ public abstract class GamerulesMixin {
     @Inject(method = "<clinit>", at = @At("TAIL"))
     private static void tailInjector(CallbackInfo ci) {
         ChestsAreChests.setBarrelFall(register(ChestsAreChests.BARREL_FALL_RULE_ID, GameRules.Category.DROPS, GameRules.BooleanRule.create(false)));
+        ChestsAreChests.setLidFling(register(ChestsAreChests.CHEST_LID_FLING_RULE_ID, GameRules.Category.MISC, GameRules.BooleanRule.create(false)));
     }
 }
