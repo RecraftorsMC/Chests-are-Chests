@@ -1,7 +1,9 @@
 package mc.recraftors.chestsarechests.mixin;
 
 import mc.recraftors.chestsarechests.ChestsAreChests;
-import mc.recraftors.chestsarechests.FallInContainer;
+import mc.recraftors.chestsarechests.util.BlockOpenableContainer;
+import mc.recraftors.chestsarechests.util.FallInContainer;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BarrelBlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -9,6 +11,7 @@ import net.minecraft.block.entity.LootableContainerBlockEntity;
 import net.minecraft.block.entity.ViewerCountManager;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -61,12 +64,19 @@ public abstract class BarrelBlockEntityMixin extends LootableContainerBlockEntit
             )
     )
     private void tickPostViewerCountUpdateInjector(CallbackInfo ci) {
-        if (this.world == null || ! this.world.getGameRules().getBoolean(ChestsAreChests.getBarrelFall())) return;
-        BlockState state = this.world.getBlockState(this.pos);
+        if (this.getWorld() == null || ! this.getWorld().getGameRules().getBoolean(ChestsAreChests.getBarrelFall())) return;
+        ServerWorld w = (ServerWorld) this.getWorld();
+        BlockPos pos = this.getPos();
+        BlockState state = w.getBlockState(pos);
+        BlockOpenableContainer container = (BlockOpenableContainer) this.stateManager;
+        if (this.chests$isOpen() && container.chests$isForcedOpened(w) && !container.chests$shouldStayOpen(w)){
+            this.chests$forceClose();
+        }
+        if (!this.chests$isOpen()) return;
         if (!state.getProperties().contains(Properties.FACING)) return;
         if (state.get(Properties.FACING) == Direction.DOWN) {
-            Box box = new Box(this.pos.getX(), this.pos.getY()-.5d, this.pos.getZ(), this.pos.getX()+1, this.pos.getY(), this.pos.getZ()+1);
-            if (this.world.isSpaceEmpty(box)) {
+            Box box = new Box(pos.getX(), pos.getY()-.5d, pos.getZ(), pos.getX()+1d, pos.getY(), pos.getZ()+1d);
+            if (w.isSpaceEmpty(box)) {
                 this.chests$dropAllDown();
             }
         }
@@ -86,6 +96,28 @@ public abstract class BarrelBlockEntityMixin extends LootableContainerBlockEntit
         BlockState state = this.world.getBlockState(this.pos);
         if (!state.getProperties().contains(Properties.OPEN)) return false;
         return state.get(Properties.OPEN);
+    }
+
+    @Override
+    public boolean chests$tryForceOpen(BlockState from) {
+        return ((BlockOpenableContainer)this.stateManager).chests$openContainerBlock((ServerWorld) this.world, this.getPos(), from, this);
+    }
+
+    @Override
+    public void chests$forceOpen(ServerWorld world, BlockPos at, BlockState from) {
+        BlockState state = world.getBlockState(at);
+        if (!state.getProperties().contains(Properties.OPEN)) return;
+        world.setBlockState(at, state.with(Properties.OPEN, true), Block.NOTIFY_LISTENERS);
+    }
+
+    @Override
+    public boolean chests$forceClose() {
+        if (this.getWorld() == null) return false;
+        BlockOpenableContainer container = (BlockOpenableContainer) this.stateManager;
+        if (container.chests$shouldStayOpen((ServerWorld) this.getWorld())) return false;
+        container.chests$forceClose(this.getWorld(), this.getPos());
+        this.getWorld().setBlockState(this.getPos(), this.getWorld().getBlockState(this.getPos()).with(Properties.OPEN, false), Block.NOTIFY_LISTENERS);
+        return true;
     }
 
     @Override

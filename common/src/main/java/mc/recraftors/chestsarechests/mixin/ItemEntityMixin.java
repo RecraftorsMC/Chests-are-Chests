@@ -1,11 +1,13 @@
 package mc.recraftors.chestsarechests.mixin;
 
-import mc.recraftors.chestsarechests.FallInContainer;
+import mc.recraftors.chestsarechests.ChestsAreChests;
+import mc.recraftors.chestsarechests.util.FallInContainer;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.MovementType;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -20,6 +22,8 @@ public abstract class ItemEntityMixin extends Entity {
     @Override
     public void move(MovementType movementType, Vec3d movement) {
         super.move(movementType, movement);
+        if (!(this.getWorld() instanceof ServerWorld world)) return;
+        if (!world.getGameRules().getBoolean(ChestsAreChests.getInsertOpen())) return;
         if (!this.horizontalCollision && !this.verticalCollision) return;
         boolean consumed = false;
         ItemEntity item = (ItemEntity) ((Object)this);

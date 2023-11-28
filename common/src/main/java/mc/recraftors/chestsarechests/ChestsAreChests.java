@@ -10,22 +10,46 @@ import org.jetbrains.annotations.Contract;
 public class ChestsAreChests {
 	public static final String MOD_ID = "chests_are_chests";
 	public static final String BARREL_FALL_RULE_ID = "chests.barrelFall";
+	public static final String DISPENSER_OPEN_RULE_ID = "chests.dispenserOpen";
+	public static final String INSERT_OPEN_ID = "chests.insertOpen";
 	public static final String CHEST_LID_FLING_RULE_ID = "chests.lidFling";
 	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 	private static GameRules.Key<GameRules.BooleanRule> barrelFall;
+	private static GameRules.Key<GameRules.BooleanRule> dispenserOpen;
+	private static GameRules.Key<GameRules.BooleanRule> insertOpen;
 	private static GameRules.Key<GameRules.BooleanRule> lidFling;
 
 	public static GameRules.Key<GameRules.BooleanRule> getBarrelFall() {
 		return barrelFall;
 	}
 
+	public static GameRules.Key<GameRules.BooleanRule> getDispenserOpen() {
+		return dispenserOpen;
+	}
+
 	public static GameRules.Key<GameRules.BooleanRule> getLidFling() {
 		return lidFling;
+	}
+
+	public static GameRules.Key<GameRules.BooleanRule> getInsertOpen() {
+		return insertOpen;
 	}
 
 	public static void setBarrelFall(GameRules.Key<GameRules.BooleanRule> ruleKey) {
 		if (barrelFall == null) {
 			barrelFall = ruleKey;
+		}
+	}
+
+	public static void setDispenserOpen(GameRules.Key<GameRules.BooleanRule> ruleKey) {
+		if (dispenserOpen == null) {
+			dispenserOpen = ruleKey;
+		}
+	}
+
+	public static void setInsertOpen(GameRules.Key<GameRules.BooleanRule> ruleKey) {
+		if (insertOpen == null) {
+			insertOpen = ruleKey;
 		}
 	}
 

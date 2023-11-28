@@ -1,14 +1,16 @@
 package mc.recraftors.chestsarechests.mixin;
 
-import mc.recraftors.chestsarechests.BooleanProvider;
+import mc.recraftors.chestsarechests.util.BlockOpenableContainer;
+import mc.recraftors.chestsarechests.util.BooleanProvider;
 import mc.recraftors.chestsarechests.ChestsAreChests;
-import mc.recraftors.chestsarechests.FallInContainer;
+import mc.recraftors.chestsarechests.util.FallInContainer;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalFacingBlock;
 import net.minecraft.block.entity.*;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -35,6 +37,8 @@ public abstract class ChestBlockEntityMixin extends LootableContainerBlockEntity
 
     @Shadow @Final private ChestLidAnimator lidAnimator;
 
+    @Shadow @Final private ViewerCountManager stateManager;
+
     @Override
     public VoxelShape chests$InputAreaShape() {
         return ABOVE;
@@ -46,13 +50,41 @@ public abstract class ChestBlockEntityMixin extends LootableContainerBlockEntity
     }
 
     @Override
+    public boolean chests$tryForceOpen(BlockState from) {
+        return ((BlockOpenableContainer)this.stateManager).chests$openContainerBlock((ServerWorld) this.world, this.getPos(), from, this);
+    }
+
+    @Override
+    public void chests$forceOpen(ServerWorld world, BlockPos at, BlockState from) {
+        this.lidAnimator.setOpen(true);
+    }
+
+    @Override
+    public boolean chests$forceClose() {
+        BlockOpenableContainer container = (BlockOpenableContainer) this.stateManager;
+        if (container.chests$shouldStayOpen((ServerWorld) this.getWorld())) return false;
+        container.chests$forceClose(world, pos);
+        this.lidAnimator.setOpen(false);
+        return true;
+    }
+
+    @Override
     public boolean chests$tryInsertion(ItemEntity entity) {
         this.checkLootInteraction(null);
         return FallInContainer.chests$inventoryInsertion(getInvStackList(), entity, this::setStack);
     }
 
+    @Inject(method = "onScheduledTick", at = @At("HEAD"))
+    private void tickHeadInjector(CallbackInfo ci) {
+        ServerWorld w = (ServerWorld) this.getWorld();
+        BlockOpenableContainer container = (BlockOpenableContainer) this.stateManager;
+        if (this.chests$isOpen() && container.chests$isForcedOpened(w) && !container.chests$shouldStayOpen(w)) {
+            this.chests$forceClose();
+        }
+    }
+
     @Mixin(targets = "net/minecraft/block/entity/ChestBlockEntity$1")
-    private static class StateManagerMixin {
+    static class StateManagerMixin {
         @Shadow @Final ChestBlockEntity field_27211;
 
         @Inject(method = "onContainerOpen", at = @At("HEAD"))

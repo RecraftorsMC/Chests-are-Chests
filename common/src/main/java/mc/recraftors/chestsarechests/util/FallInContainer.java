@@ -1,9 +1,11 @@
-package mc.recraftors.chestsarechests;
+package mc.recraftors.chestsarechests.util;
 
+import mc.recraftors.chestsarechests.ChestsAreChests;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.BlockPos;
@@ -54,6 +56,16 @@ public interface FallInContainer {
 
     default VoxelShape chests$InputAreaShape() {
         return EMPTY;
+    }
+
+    default void chests$forceOpen(ServerWorld world, BlockPos at, BlockState from) {}
+
+    default boolean chests$tryForceOpen(BlockState from) {
+        return false;
+    }
+
+    default boolean chests$forceClose() {
+        return false;
     }
 
     static boolean chests$inventoryInsertion(DefaultedList<ItemStack> inv, ItemEntity item, BiConsumer<Integer, ItemStack> setStack) {

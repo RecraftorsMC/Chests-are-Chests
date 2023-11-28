@@ -19,5 +19,7 @@ public abstract class GamerulesMixin {
     private static void tailInjector(CallbackInfo ci) {
         ChestsAreChests.setBarrelFall(register(ChestsAreChests.BARREL_FALL_RULE_ID, GameRules.Category.DROPS, GameRules.BooleanRule.create(false)));
         ChestsAreChests.setLidFling(register(ChestsAreChests.CHEST_LID_FLING_RULE_ID, GameRules.Category.MISC, GameRules.BooleanRule.create(false)));
+        ChestsAreChests.setInsertOpen(register(ChestsAreChests.INSERT_OPEN_ID, GameRules.Category.DROPS, GameRules.BooleanRule.create(true)));
+        ChestsAreChests.setDispenserOpen(register(ChestsAreChests.DISPENSER_OPEN_RULE_ID, GameRules.Category.MISC, GameRules.BooleanRule.create(true)));
     }
 }

@@ -8,8 +8,10 @@
     "ChestBlockEntityMixin",
     "ChestBlockEntityMixin$StateManagerMixin",
     "ChestLidAnimatorMixin",
+    "DispenserBlockMixin",
     "GamerulesMixin",
-    "ItemEntityMixin"
+    "ItemEntityMixin",
+    "ViewerCountManagerMixin"
   ],
   "client": [
   ],
