@@ -9,7 +9,9 @@
     "ChestBlockEntityMixin$StateManagerMixin",
     "ChestLidAnimatorMixin",
     "DispenserBlockMixin",
+    "EditGamerulesScreenAnonymousVisitorMixin",
     "GamerulesMixin",
+    "GameRulesVisitorMixin",
     "ItemEntityMixin",
     "ViewerCountManagerMixin"
   ],
