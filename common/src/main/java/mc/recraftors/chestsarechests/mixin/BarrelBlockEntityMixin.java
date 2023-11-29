@@ -18,6 +18,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -31,7 +32,7 @@ public abstract class BarrelBlockEntityMixin extends LootableContainerBlockEntit
 
     @Shadow private DefaultedList<ItemStack> inventory;
 
-    @Shadow private ViewerCountManager stateManager;
+    @Shadow @Final private ViewerCountManager stateManager;
 
     protected BarrelBlockEntityMixin(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);

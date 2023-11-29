@@ -94,15 +94,6 @@ public class ChestsAreChests {
 	}
 
 	public static boolean canMergeItems(ItemStack first, ItemStack second) {
-		if (!first.isOf(second.getItem())) {
-			return false;
-		}
-		if (first.getDamage() != second.getDamage()) {
-			return false;
-		}
-		if (first.getCount() > first.getMaxCount()) {
-			return false;
-		}
-		return ItemStack.areNbtEqual(first, second);
+		return first.getCount() <= first.getMaxCount() && ItemStack.canCombine(first, second);
 	}
 }

@@ -44,7 +44,7 @@ public abstract class ViewerCountManagerMixin implements BlockOpenableContainer 
         container.chests$forceOpen(world, pos, from);
         this.onContainerOpen(world, pos, it);
         this.onViewerCountUpdate(world, pos, it, 0, 1);
-        world.createAndScheduleBlockTick(pos, world.getBlockState(pos).getBlock(), 2*SCHEDULE_TICK_DELAY);
+        world.scheduleBlockTick(pos, world.getBlockState(pos).getBlock(), 2*SCHEDULE_TICK_DELAY);
         return true;
     }
 

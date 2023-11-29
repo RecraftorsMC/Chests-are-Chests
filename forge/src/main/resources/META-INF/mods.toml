@@ -16,12 +16,12 @@ Allows items to fall into open containers
 [[dependencies.chests_are_chests]]
    modId="forge"
    mandatory=true
-   versionRange="[41,)"
+   versionRange="[47,)"
    ordering="NONE"
    side="BOTH"
 [[dependencies.chests_are_chests]]
    modId="minecraft"
    mandatory=true
-   versionRange="[1.19,1.20)"
+   versionRange="[1.20.1)"
    ordering="NONE"
    side="BOTH"

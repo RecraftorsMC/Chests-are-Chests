@@ -3,11 +3,11 @@ package mc.recraftors.chestsarechests.util.shadow;
 import com.google.common.collect.Lists;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.world.EditGameRulesScreen;
 import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 
@@ -36,12 +36,12 @@ public abstract class NamedRuleWidget extends EditGameRulesScreen.AbstractRuleWi
         return children;
     }
 
-    protected void drawName(MatrixStack matrices, int x, int y) {
+    protected void drawName(DrawContext context, int x, int y) {
         if (this.name.size() == 1) {
-            screen.client.textRenderer.draw(matrices, this.name.get(0), y, (x + 5), 0xFFFFFF);
+            context.drawText(screen.client.textRenderer, this.name.get(0), y, x + 5, 16777215, false);
         } else if (this.name.size() >= 2) {
-            screen.client.textRenderer.draw(matrices, this.name.get(0), y, x, 0xFFFFFF);
-            screen.client.textRenderer.draw(matrices, this.name.get(1), y, (x + 10), 0xFFFFFF);
+            context.drawText(screen.client.textRenderer, this.name.get(0), y, x, 16777215, false);
+            context.drawText(screen.client.textRenderer, this.name.get(1), y, x + 10, 16777215, false);
         }
     }
 }

@@ -5,9 +5,9 @@ import com.mojang.brigadier.context.CommandContext;
 import mc.recraftors.chestsarechests.ChestsAreChests;
 import mc.recraftors.chestsarechests.util.shadow.NamedRuleWidget;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.world.EditGameRulesScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.OrderedText;
@@ -116,11 +116,11 @@ public class FloatRule extends GameRules.Rule<FloatRule> {
         }
 
         @Override
-        public void render(MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            this.drawName(matrices, y, x);
-            this.valueWidget.x = x + entryWidth - 44;
-            this.valueWidget.y = y;
-            this.valueWidget.render(matrices, mouseX, mouseY, tickDelta);
+        public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+            this.drawName(context, y, x);
+            this.valueWidget.setX(x + entryWidth - 44);
+            this.valueWidget.setY(y);
+            this.valueWidget.render(context, mouseX, mouseY, tickDelta);
         }
     }
 }
