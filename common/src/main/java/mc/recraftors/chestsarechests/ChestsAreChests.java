@@ -85,6 +85,7 @@ public class ChestsAreChests {
 	}
 
 	public static void init() {
+		LOGGER.debug("{} initialized", MOD_ID);
 	}
 
 	@Contract

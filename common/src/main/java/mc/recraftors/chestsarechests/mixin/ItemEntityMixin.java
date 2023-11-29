@@ -9,6 +9,7 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.MovementType;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,69 +27,79 @@ public abstract class ItemEntityMixin extends Entity {
         if (!world.getGameRules().getBoolean(ChestsAreChests.getInsertOpen())) return;
         if (!this.horizontalCollision && !this.verticalCollision) return;
         boolean consumed = false;
-        int x = (int)getX();
-        int y = (int)getY();
-        int z = (int)getZ();
         ItemEntity item = (ItemEntity) ((Object)this);
-        BlockPos pos = new BlockPos(x, (int) (getY()-.5), z);
+        // inside
+        BlockPos pos = item.getBlockPos();
         BlockState state = world.getBlockState(pos);
         if (state.hasBlockEntity() && world.getBlockEntity(pos) instanceof FallInContainer container) {
             consumed = container.chests$fallIn(pos, state, item);
         }
-        pos = new BlockPos(x, (int) (getY()+.5), z);
+        if (consumed) return;
+        // below
+        pos = pos.down();
+        state = world.getBlockState(pos);
+        if (state.hasBlockEntity() && world.getBlockEntity(pos) instanceof FallInContainer container) {
+            consumed = container.chests$fallIn(pos, state, item);
+        }
+        if (consumed) return;
+        // up
+        pos = pos.up(2);
         state = world.getBlockState(pos);
         if (state.hasBlockEntity() && world.getBlockEntity(pos) instanceof FallInContainer container) {
             consumed = container.chests$fallIn(pos, state, item);
         }
         if (consumed) return;
         // proximity to block side bounds comparison -> dx < dz => try insert on X first
-        double dx = Math.abs(1-(getX() - x));
-        double dz = Math.abs(1-(getZ() - z));
+        double dx = Math.abs(1-(getX() - (int)getX()));
+        double dz = Math.abs(1-(getZ() - (int)getZ()));
         boolean axis = dx < dz;
         if (axis) {
+            // east
             //noinspection DuplicatedCode
-            pos = new BlockPos((int) (getX() + .5), y, z);
+            pos = item.getBlockPos().offset(Direction.Axis.X, 1);
             state = world.getBlockState(pos);
             if (state.hasBlockEntity() && world.getBlockEntity(pos) instanceof FallInContainer container) {
                 consumed = container.chests$fallIn(pos, state, item);
             }
             if (consumed) return;
-            //noinspection DuplicatedCode
-            pos = new BlockPos((int) (getX() - .5), y, z);
+            // west
+            pos = pos.offset(Direction.Axis.X, -2);
             state = world.getBlockState(pos);
             if (state.hasBlockEntity() && world.getBlockEntity(pos) instanceof FallInContainer container) {
                 consumed = container.chests$fallIn(pos, state, item);
             }
             if (consumed) return;
         }
-        pos = new BlockPos(x, y, (int) (getZ() + .5));
+        // south
+        pos = item.getBlockPos().offset(Direction.Axis.Z, 1);
         //noinspection DuplicatedCode
         state = world.getBlockState(pos);
         if (state.hasBlockEntity() && world.getBlockEntity(pos) instanceof FallInContainer container) {
             consumed = container.chests$fallIn(pos, state, item);
         }
         if (consumed) return;
-        pos = new BlockPos(x, y, (int) (getZ() - .5));
+        pos = pos.offset(Direction.Axis.Z, -2);
         //noinspection DuplicatedCode
         state = world.getBlockState(pos);
         if (state.hasBlockEntity() && world.getBlockEntity(pos) instanceof FallInContainer container) {
             consumed = container.chests$fallIn(pos, state, item);
         }
+        if (consumed || !axis) {
+            return;
+        }
+        // east
+        //noinspection DuplicatedCode
+        pos = item.getBlockPos().offset(Direction.Axis.X, 1);
+        state = world.getBlockState(pos);
+        if (state.hasBlockEntity() && world.getBlockEntity(pos) instanceof FallInContainer container) {
+            consumed = container.chests$fallIn(pos, state, item);
+        }
         if (consumed) return;
-        if (!axis) {
-            //noinspection DuplicatedCode
-            pos = new BlockPos((int) (getX() + .5), y, z);
-            state = world.getBlockState(pos);
-            if (state.hasBlockEntity() && world.getBlockEntity(pos) instanceof FallInContainer container) {
-                consumed = container.chests$fallIn(pos, state, item);
-            }
-            if (consumed) return;
-            //noinspection DuplicatedCode
-            pos = new BlockPos((int) (getX() - .5), y, z);
-            state = world.getBlockState(pos);
-            if (state.hasBlockEntity() && world.getBlockEntity(pos) instanceof FallInContainer container) {
-                container.chests$fallIn(pos, state, item);
-            }
+        // west
+        pos = pos.offset(Direction.Axis.X, -2);
+        state = world.getBlockState(pos);
+        if (state.hasBlockEntity() && world.getBlockEntity(pos) instanceof FallInContainer container) {
+            container.chests$fallIn(pos, state, item);
         }
     }
 }
