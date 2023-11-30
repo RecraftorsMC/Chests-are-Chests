@@ -11,9 +11,8 @@ import org.spongepowered.asm.mixin.Shadow;
 @Mixin(targets = "net/minecraft/client/gui/screen/world/EditGameRulesScreen$RuleListWidget$1")
 public abstract class EditGamerulesScreenAnonymousVisitorMixin implements GameRulesVisitor {
 
-
     @Shadow
-    private <T extends GameRules.Rule<T>> void createRuleWidget(GameRules.Key<T> key, EditGameRulesScreen.RuleWidgetFactory<T> widgetFactory) {}
+    public <T extends GameRules.Rule<T>> void createRuleWidget(GameRules.Key<T> key, EditGameRulesScreen.RuleWidgetFactory<T> widgetFactory) {}
 
     @Override
     public void chests$visitFloat(GameRules.Key<FloatRule> key, GameRules.Type<FloatRule> type) {

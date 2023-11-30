@@ -29,8 +29,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class BarrelBlockEntityMixin extends LootableContainerBlockEntity implements FallInContainer {
     @Shadow protected abstract DefaultedList<ItemStack> getInvStackList();
 
-    @Shadow private DefaultedList<ItemStack> inventory;
-
     @Shadow private ViewerCountManager stateManager;
 
     protected BarrelBlockEntityMixin(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
@@ -42,16 +40,7 @@ public abstract class BarrelBlockEntityMixin extends LootableContainerBlockEntit
         if (this.world == null) {
             return;
         }
-        int s = this.inventory.size();
-        for (int i = 0; i < s; i++) {
-            ItemStack stack = this.inventory.get(i);
-            if (stack.isEmpty()) continue;
-            ItemEntity entity = new ItemEntity(this.world, this.pos.getX()+.5, this.pos.getY()-.5, this.pos.getZ()+.5, stack.copy());
-            entity.setVelocity(0, -.05, 0);
-            this.world.spawnEntity(entity);
-            this.removeStack(i);
-            this.markDirty();
-        }
+        ChestsAreChests.dropAllDown(this, this);
         this.stateManager.updateViewerCount(world, pos, world.getBlockState(pos));
     }
 
