@@ -28,6 +28,7 @@ public abstract class GamerulesMixin implements GamerulesFloatProvider {
         ChestsAreChests.setLidVerticalPower(register(ChestsAreChests.CHESTS_LID_VERTICAL_POWER_RULE_ID, GameRules.Category.MISC, FloatRule.create(.6f)));
         ChestsAreChests.setInsertOpen(register(ChestsAreChests.INSERT_OPEN_ID, GameRules.Category.DROPS, GameRules.BooleanRule.create(true)));
         ChestsAreChests.setDispenserOpen(register(ChestsAreChests.DISPENSER_OPEN_RULE_ID, GameRules.Category.MISC, GameRules.BooleanRule.create(true)));
+        ChestsAreChests.setDispenserOpenDuration(register(ChestsAreChests.DISPENSER_OPEN_DURATION_RULE_ID, GameRules.Category.MISC, GameRules.IntRule.create(10)));
     }
 
     @Unique

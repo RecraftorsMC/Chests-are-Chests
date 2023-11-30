@@ -4,7 +4,6 @@ import mc.recraftors.chestsarechests.util.BlockOpenableContainer;
 import mc.recraftors.chestsarechests.util.BooleanProvider;
 import mc.recraftors.chestsarechests.ChestsAreChests;
 import mc.recraftors.chestsarechests.util.FallInContainer;
-import mc.recraftors.chestsarechests.util.GamerulesFloatProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalFacingBlock;
 import net.minecraft.block.entity.*;
@@ -94,11 +93,7 @@ public abstract class ChestBlockEntityMixin extends LootableContainerBlockEntity
             if (!state.getProperties().contains(HorizontalFacingBlock.FACING)) return;
             Direction direction = state.get(HorizontalFacingBlock.FACING);
             world.getEntitiesByType(EntityType.ITEM, new Box(this.field_27211.getPos().offset(Direction.UP, 1)), t -> true).forEach(e -> {
-                int x = direction.getOffsetX();
-                int z = direction.getOffsetZ();
-                float horizontalPower = ((GamerulesFloatProvider)world.getGameRules()).chests$getFloat(ChestsAreChests.getLidHorizontalPower());
-                float verticalPower = ((GamerulesFloatProvider)world.getGameRules()).chests$getFloat(ChestsAreChests.getLidVerticalPower());
-                e.addVelocity(-horizontalPower * x, verticalPower, -horizontalPower*z);
+                ChestsAreChests.lidFlingItem(e, direction);
             });
         }
     }

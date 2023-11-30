@@ -1,5 +1,6 @@
 package mc.recraftors.chestsarechests.mixin;
 
+import mc.recraftors.chestsarechests.ChestsAreChests;
 import mc.recraftors.chestsarechests.util.BlockOpenableContainer;
 import mc.recraftors.chestsarechests.util.FallInContainer;
 import net.minecraft.block.BlockState;
@@ -22,8 +23,6 @@ import java.util.HashSet;
 
 @Mixin(ViewerCountManager.class)
 public abstract class ViewerCountManagerMixin implements BlockOpenableContainer {
-    @Shadow @Final private static final int SCHEDULE_TICK_DELAY = 5;
-
     @Shadow protected abstract void onContainerOpen(World world, BlockPos pos, BlockState state);
 
     @Shadow protected abstract void onViewerCountUpdate(World world, BlockPos pos, BlockState state, int oldViewerCount, int newViewerCount);
@@ -38,13 +37,14 @@ public abstract class ViewerCountManagerMixin implements BlockOpenableContainer 
     @Override
     public boolean chests$openContainerBlock(ServerWorld world, BlockPos pos, BlockState from, FallInContainer container) {
         if (chests$shouldStayOpen(world)) return false;
-        this.chests$blockOpenTick = world.getServer().getTicks() + 2*SCHEDULE_TICK_DELAY;
+        int duration = world.getGameRules().getInt(ChestsAreChests.getDispenserOpenDuration());
+        this.chests$blockOpenTick = world.getServer().getTicks() + duration;
         this.chests$blockForcedOpen = true;
         BlockState it = world.getBlockState(pos);
         container.chests$forceOpen(world, pos, from);
         this.onContainerOpen(world, pos, it);
         this.onViewerCountUpdate(world, pos, it, 0, 1);
-        world.scheduleBlockTick(pos, world.getBlockState(pos).getBlock(), 2*SCHEDULE_TICK_DELAY);
+        world.scheduleBlockTick(pos, world.getBlockState(pos).getBlock(), Math.max(duration, 1));
         return true;
     }
 
