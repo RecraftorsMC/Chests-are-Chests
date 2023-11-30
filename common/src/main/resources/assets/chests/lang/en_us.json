@@ -3,6 +3,8 @@
   "gamerule.chests.barrelFall.description": "Toggle making items fall from containers open on their below side.",
   "gamerule.chests.insertOpen": "Do insert in containers",
   "gamerule.chests.insertOpen.description": "Toggle making items be inserted in containers if open and on the right side.",
+  "gamerule.chests.dispenserOpen": "Do open containers with dispensers",
+  "gamerule.chests.dispenserOpen.description": "Toggle making triggered empty dispensers open and close containers they're facing.",
   "gamerule.chests.lidFling": "Do chest lid flinging",
   "gamerule.chests.lidFling.description": "Toggle chests-like containers' lid flinging items lying on them upon opening.",
   "gamerule.chests.lidFling.horizontalPower": "Chest lid flinging horizontal power",
