@@ -31,9 +31,18 @@ Now the game will feel more natural, even just a little bit, won't you agree?
 * Making chest lids throw items
   * default: disabled
   * gamerule: `chests.lidFling`
+  * Horizontal flinging velocity
+    * default: 0.25
+    * gamerule: `chests.lidFling.horizontalPower`
+  * Vertical flinging velocity
+    * default: 0.6
+    * gamerule: `chests.lidFling.verticalPower`
 * Opening containers by powering empty dispensers
   * default: enabled
   * gamerule: `chests.dispenserOpen`
+  * Automated opening duration (in world ticks)
+    * default: 10
+    * gamerule: `chests.dispenserOpen.duration`
 
 ### Mod compatibilities
 
