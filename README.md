@@ -37,7 +37,12 @@ Now the game will feel more natural, even just a little bit, won't you agree?
 
 ### Mod compatibilities
 
-_none to this day_
+**Implemented**
+* [Anner's Iron Chests](https://modrinth.com/mod/cyberanner-ironchest)
+
+**Possibilities**
+* [Iron Chests: Restocked](https://modrinth.com/mod/ironchests): _reported until further news since incompatible with base 1.19 despite all indications_
+* [Reinforced Chests](https://modrinth.com/mod/reinforced-chests): _reported until further news since incompatible with base 1.19 despite all indications_
 
 ### Showcase
 

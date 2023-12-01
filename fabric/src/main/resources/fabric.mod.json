@@ -29,7 +29,8 @@
   "environment": "*",
   "entrypoints": {},
   "mixins": [
-    "chests_are_chests.mixins.json"
+    "chests_are_chests.mixins.json",
+    "chests_are_chests-fabric.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.14.20",
