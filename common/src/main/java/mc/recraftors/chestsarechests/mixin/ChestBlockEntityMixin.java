@@ -17,6 +17,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -51,7 +52,7 @@ public abstract class ChestBlockEntityMixin extends LootableContainerBlockEntity
 
     @Override
     public boolean chests$tryForceOpen(BlockState from) {
-        return ((BlockOpenableContainer)this.stateManager).chests$openContainerBlock((ServerWorld) this.world, this.getPos(), from, this);
+        return this.chests$getContainer().chests$openContainerBlock((ServerWorld) this.world, this.getPos(), from, this);
     }
 
     @Override
@@ -61,7 +62,7 @@ public abstract class ChestBlockEntityMixin extends LootableContainerBlockEntity
 
     @Override
     public boolean chests$forceClose() {
-        BlockOpenableContainer container = (BlockOpenableContainer) this.stateManager;
+        BlockOpenableContainer container = this.chests$getContainer();
         if (container.chests$shouldStayOpen((ServerWorld) this.getWorld())) return false;
         container.chests$forceClose(world, pos);
         this.lidAnimator.setOpen(false);
@@ -74,10 +75,15 @@ public abstract class ChestBlockEntityMixin extends LootableContainerBlockEntity
         return FallInContainer.chests$inventoryInsertion(getInvStackList(), entity, this::setStack);
     }
 
+    @Override
+    public @NotNull BlockOpenableContainer chests$getContainer() {
+        return (BlockOpenableContainer) this.stateManager;
+    }
+
     @Inject(method = "onScheduledTick", at = @At("HEAD"))
     private void tickHeadInjector(CallbackInfo ci) {
         ServerWorld w = (ServerWorld) this.getWorld();
-        BlockOpenableContainer container = (BlockOpenableContainer) this.stateManager;
+        BlockOpenableContainer container = this.chests$getContainer();
         if (this.chests$isOpen() && container.chests$isForcedOpened(w) && !container.chests$shouldStayOpen(w)) {
             this.chests$forceClose();
         }
