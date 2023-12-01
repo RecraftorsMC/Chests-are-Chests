@@ -5,13 +5,20 @@ import mc.recraftors.chestsarechests.util.FloatRule;
 import mc.recraftors.chestsarechests.util.GamerulesFloatProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.tag.TagKey;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.GameRules;
+import net.minecraft.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -32,6 +39,7 @@ public class ChestsAreChests {
 	private static GameRules.Key<GameRules.BooleanRule> lidFling;
 	private static GameRules.Key<FloatRule> lidHorizontalPower;
 	private static GameRules.Key<FloatRule> lidVerticalPower;
+	public static final TagKey<EntityType<?>> FLINGABLE = TagKey.of(Registry.ENTITY_TYPE_KEY, new Identifier(MOD_ID, "flingable"));
 
 	public static GameRules.Key<GameRules.BooleanRule> getBarrelFall() {
 		return barrelFall;
@@ -125,7 +133,7 @@ public class ChestsAreChests {
 		}
 	}
 
-	public static void lidFlingItem(ItemEntity entity, Direction direction) {
+	public static void lidFlingEntity(Entity entity, Direction direction) {
 		int x = direction.getOffsetX();
 		int z = direction.getOffsetZ();
 		float horiz = ((GamerulesFloatProvider)entity.getWorld().getGameRules()).chests$getFloat(getLidHorizontalPower());
@@ -142,5 +150,20 @@ public class ChestsAreChests {
 
 	public static void scheduleTick(ServerWorld world, BlockPos pos, int duration) {
 		world.scheduleBlockTick(pos, world.getBlockState(pos).getBlock(), duration);
+	}
+
+	public static void ejectAbove(Direction facing, BlockEntity entity) {
+		World world = entity.getWorld();
+		if (world == null) {
+			return;
+		}
+		if (!world.getGameRules().getBoolean(ChestsAreChests.getLidFling())) return;
+		world.getOtherEntities(null, new Box(entity.getPos().offset(Direction.UP, 1)),
+						e -> !e.isSpectator() && e.getType().isIn(FLINGABLE)
+				)
+				.forEach(e -> {
+					lidFlingEntity(e, facing);
+				}
+		);
 	}
 }
