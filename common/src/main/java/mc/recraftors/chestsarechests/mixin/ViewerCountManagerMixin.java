@@ -10,7 +10,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -37,14 +36,14 @@ public abstract class ViewerCountManagerMixin implements BlockOpenableContainer 
     @Override
     public boolean chests$openContainerBlock(ServerWorld world, BlockPos pos, BlockState from, FallInContainer container) {
         if (chests$shouldStayOpen(world)) return false;
-        int duration = world.getGameRules().getInt(ChestsAreChests.getDispenserOpenDuration());
+        int duration = Math.max(1, world.getGameRules().getInt(ChestsAreChests.getDispenserOpenDuration()));
         this.chests$blockOpenTick = world.getServer().getTicks() + duration;
         this.chests$blockForcedOpen = true;
         BlockState it = world.getBlockState(pos);
         container.chests$forceOpen(world, pos, from);
         this.onContainerOpen(world, pos, it);
         this.onViewerCountUpdate(world, pos, it, 0, 1);
-        world.createAndScheduleBlockTick(pos, world.getBlockState(pos).getBlock(), Math.max(duration, 1));
+        ChestsAreChests.scheduleTick(world, pos, duration);
         return true;
     }
 
@@ -60,9 +59,14 @@ public abstract class ViewerCountManagerMixin implements BlockOpenableContainer 
         this.chests$blockOpenTick = 0;
         this.onContainerClose(world, pos, state);
         this.onViewerCountUpdate(world, pos, state, 0, 1);
-        for (ServerPlayerEntity player : this.chests$viewers) {
+        for (ServerPlayerEntity player : this.chests$getViewers()) {
             player.closeHandledScreen();
         }
+    }
+
+    @Override
+    public Collection<ServerPlayerEntity> chests$getViewers() {
+        return this.chests$viewers;
     }
 
     @Override

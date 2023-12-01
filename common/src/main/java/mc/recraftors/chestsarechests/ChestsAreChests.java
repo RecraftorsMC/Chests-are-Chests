@@ -1,6 +1,5 @@
 package mc.recraftors.chestsarechests;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import mc.recraftors.chestsarechests.util.FallInContainer;
 import mc.recraftors.chestsarechests.util.FloatRule;
 import mc.recraftors.chestsarechests.util.GamerulesFloatProvider;
@@ -15,7 +14,6 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.GameRules;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.Contract;
 
 public class ChestsAreChests {
 	public static final String MOD_ID = "chests_are_chests";
@@ -106,12 +104,7 @@ public class ChestsAreChests {
 	}
 
 	public static void init() {
-	}
-
-	@Contract
-	@ExpectPlatform
-	public static boolean isModLoaded(String modId) {
-		throw new UnsupportedOperationException();
+		LOGGER.debug("{} loaded", MOD_ID);
 	}
 
 	public static boolean canMergeItems(ItemStack first, ItemStack second) {
@@ -153,5 +146,9 @@ public class ChestsAreChests {
 		BlockEntity entity = world.getBlockEntity(target);
 		if (!(entity instanceof FallInContainer container)) return false;
 		return (container.chests$isOpen() && container.chests$forceClose()) || container.chests$tryForceOpen(state);
+	}
+
+	public static void scheduleTick(ServerWorld world, BlockPos pos, int duration) {
+		world.createAndScheduleBlockTick(pos, world.getBlockState(pos).getBlock(), duration);
 	}
 }

@@ -12,6 +12,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -66,6 +67,10 @@ public interface FallInContainer {
 
     default boolean chests$forceClose() {
         return false;
+    }
+
+    default @Nullable BlockOpenableContainer chests$getContainer() {
+        return null;
     }
 
     static boolean chests$inventoryInsertion(DefaultedList<ItemStack> inv, ItemEntity item, BiConsumer<Integer, ItemStack> setStack) {
