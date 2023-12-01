@@ -30,6 +30,10 @@ allprojects {
     group = rootProject.maven_group
 
     repositories {
+        maven {
+            name = "Modrinth"
+            url = "https://api.modrinth.com/maven"
+        }
     }
 
     tasks.withType(JavaCompile) {
