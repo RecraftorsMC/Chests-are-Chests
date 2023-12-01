@@ -7,13 +7,11 @@ import mc.recraftors.chestsarechests.util.FallInContainer;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalFacingBlock;
 import net.minecraft.block.entity.*;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
@@ -95,12 +93,9 @@ public abstract class ChestBlockEntityMixin extends LootableContainerBlockEntity
 
         @Inject(method = "onContainerOpen", at = @At("HEAD"))
         private void onContainerOpenHeadInjector(World world, BlockPos pos, BlockState state, CallbackInfo ci) {
-            if (!world.getGameRules().getBoolean(ChestsAreChests.getLidFling())) return;
             if (!state.getProperties().contains(HorizontalFacingBlock.FACING)) return;
             Direction direction = state.get(HorizontalFacingBlock.FACING);
-            world.getEntitiesByType(EntityType.ITEM, new Box(this.field_27211.getPos().offset(Direction.UP, 1)), t -> true).forEach(e -> {
-                ChestsAreChests.lidFlingItem(e, direction);
-            });
+            ChestsAreChests.ejectAbove(direction, this.field_27211);
         }
     }
 }
