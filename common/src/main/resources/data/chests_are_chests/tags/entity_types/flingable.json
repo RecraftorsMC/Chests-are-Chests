@@ -1,0 +1,9 @@
+{
+  "values": [
+    "minecraft:item",
+    {
+      "required": false,
+      "id": "botania:thrown_item"
+    }
+  ]
+}
