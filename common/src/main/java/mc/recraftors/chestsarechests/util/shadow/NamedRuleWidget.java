@@ -1,6 +1,7 @@
 package mc.recraftors.chestsarechests.util.shadow;
 
 import com.google.common.collect.Lists;
+import mc.recraftors.chestsarechests.util.ClientProvider;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;
@@ -19,10 +20,11 @@ public abstract class NamedRuleWidget extends EditGameRulesScreen.AbstractRuleWi
     private final List<ClickableWidget> children;
     private final EditGameRulesScreen screen;
 
+    @SuppressWarnings("resource")
     protected NamedRuleWidget(List<OrderedText> description, Text name, EditGameRulesScreen screen) {
         super(description);
         this.children = Lists.newArrayList();
-        this.name = screen.client.textRenderer.wrapLines(name, 175);
+        this.name = ((ClientProvider)screen).chests$getClient().textRenderer.wrapLines(name, 175);
         this.screen = screen;
     }
 
@@ -36,12 +38,13 @@ public abstract class NamedRuleWidget extends EditGameRulesScreen.AbstractRuleWi
         return children;
     }
 
+    @SuppressWarnings("resource")
     protected void drawName(DrawContext context, int x, int y) {
         if (this.name.size() == 1) {
-            context.drawText(screen.client.textRenderer, this.name.get(0), y, x + 5, 16777215, false);
+            context.drawText(((ClientProvider)screen).chests$getClient().textRenderer, this.name.get(0), y, x + 5, 16777215, false);
         } else if (this.name.size() >= 2) {
-            context.drawText(screen.client.textRenderer, this.name.get(0), y, x, 16777215, false);
-            context.drawText(screen.client.textRenderer, this.name.get(1), y, x + 10, 16777215, false);
+            context.drawText(((ClientProvider)screen).chests$getClient().textRenderer, this.name.get(0), y, x, 16777215, false);
+            context.drawText(((ClientProvider)screen).chests$getClient().textRenderer, this.name.get(1), y, x + 10, 16777215, false);
         }
     }
 }

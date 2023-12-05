@@ -1,7 +1,7 @@
 package mc.recraftors.chestsarechests.mixin;
 
 import mc.recraftors.chestsarechests.util.BlockOpenableContainer;
-import mc.recraftors.chestsarechests.util.BooleanProvider;
+import mc.recraftors.chestsarechests.util.BooleanHolder;
 import mc.recraftors.chestsarechests.ChestsAreChests;
 import mc.recraftors.chestsarechests.util.FallInContainer;
 import net.minecraft.block.BlockState;
@@ -45,7 +45,7 @@ public abstract class ChestBlockEntityMixin extends LootableContainerBlockEntity
 
     @Override
     public boolean chests$isOpen() {
-        return ((BooleanProvider)this.lidAnimator).chests$getBool();
+        return this.chests$getBooleanHolder().chests$getBool();
     }
 
     @Override
@@ -55,7 +55,7 @@ public abstract class ChestBlockEntityMixin extends LootableContainerBlockEntity
 
     @Override
     public void chests$forceOpen(ServerWorld world, BlockPos at, BlockState from) {
-        this.lidAnimator.setOpen(true);
+        this.chests$getBooleanHolder().chests$setBool(true);
     }
 
     @Override
@@ -63,7 +63,7 @@ public abstract class ChestBlockEntityMixin extends LootableContainerBlockEntity
         BlockOpenableContainer container = this.chests$getContainer();
         if (container.chests$shouldStayOpen((ServerWorld) this.getWorld())) return false;
         container.chests$forceClose(world, pos);
-        this.lidAnimator.setOpen(false);
+        this.chests$getBooleanHolder().chests$setBool(false);
         return true;
     }
 
@@ -76,6 +76,11 @@ public abstract class ChestBlockEntityMixin extends LootableContainerBlockEntity
     @Override
     public @NotNull BlockOpenableContainer chests$getContainer() {
         return (BlockOpenableContainer) this.stateManager;
+    }
+
+    @Override
+    public @NotNull BooleanHolder chests$getBooleanHolder() {
+        return (BooleanHolder) this.lidAnimator;
     }
 
     @Inject(method = "onScheduledTick", at = @At("HEAD"))
