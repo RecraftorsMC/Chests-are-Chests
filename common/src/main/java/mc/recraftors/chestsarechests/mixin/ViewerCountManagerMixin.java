@@ -57,11 +57,11 @@ public abstract class ViewerCountManagerMixin implements BlockOpenableContainer 
     public void chests$forceClose(World world, BlockPos pos) {
         BlockState state = world.getBlockState(pos);
         this.chests$blockOpenTick = 0;
-        this.onContainerClose(world, pos, state);
-        this.onViewerCountUpdate(world, pos, state, 0, 1);
         for (ServerPlayerEntity player : this.chests$getViewers()) {
             player.closeHandledScreen();
         }
+        this.onContainerClose(world, pos, state);
+        this.onViewerCountUpdate(world, pos, state, 0, 1);
     }
 
     @Override
@@ -80,12 +80,16 @@ public abstract class ViewerCountManagerMixin implements BlockOpenableContainer 
         if (this.viewerCount <= 0) {
             this.viewerCount = 1;
         }
-        this.chests$viewers.remove(player);
+        this.chests$getViewers().remove(player);
+    }
+
+    @Inject(method = "openContainer", at = @At("HEAD"))
+    private void openContainerHeadInjector(PlayerEntity player, World world, BlockPos pos, BlockState state, CallbackInfo ci) {
+        this.chests$getViewers().add((ServerPlayerEntity) player);
     }
 
     @Inject(method = "openContainer", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/entity/ViewerCountManager;onContainerOpen(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;)V", shift = At.Shift.AFTER))
     private void openContainerPostOnContainerOpenInjector(PlayerEntity player, World world, BlockPos pos, BlockState state, CallbackInfo ci) {
         this.chests$blockForcedOpen = false;
-        this.chests$viewers.add((ServerPlayerEntity) player);
     }
 }

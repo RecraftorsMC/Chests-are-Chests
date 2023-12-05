@@ -73,6 +73,10 @@ public interface FallInContainer {
         return null;
     }
 
+    default @Nullable BooleanHolder chests$getBooleanHolder() {
+        return null;
+    }
+
     static boolean chests$inventoryInsertion(DefaultedList<ItemStack> inv, ItemEntity item, BiConsumer<Integer, ItemStack> setStack) {
         ItemStack stack = item.getStack().copy();
         int size = inv.size();

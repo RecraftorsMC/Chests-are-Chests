@@ -16,6 +16,7 @@
     "ViewerCountManagerMixin"
   ],
   "client": [
+    "ScreenClientAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

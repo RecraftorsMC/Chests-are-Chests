@@ -5,7 +5,10 @@
   "plugin": "mc.recraftors.chestsarechests.mixin.compat.Plugin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "compat.ironchests.present.GenericChestEntityMixin"
+    "compat.ironchests.present.GenericChestEntityMixin",
+    "compat.mythicmetals_decorations.present.MythicChestBlockEntityMixin",
+    "compat.mythicmetals_decorations.present.MythicChestBlockEntityMixin$StateManagerMixin",
+    "compat.mythicmetals_decorations.present.MythicChestBlockMixin"
   ],
   "client": [
   ],

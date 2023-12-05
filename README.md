@@ -48,6 +48,7 @@ Now the game will feel more natural, even just a little bit, won't you agree?
 
 **Implemented**
 * [Anner's Iron Chests](https://modrinth.com/mod/cyberanner-ironchest)
+* [Mythic Metals Decorations](https://modrinth.com/mod/mythicmetals-decorations)
 
 **Possibilities**
 * [Iron Chests: Restocked](https://modrinth.com/mod/ironchests): _reported until further news since incompatible with base 1.19 despite all indications_
