@@ -108,11 +108,13 @@ public class FloatRule extends GameRules.Rule<FloatRule> {
             this.valueWidget.setChangedListener(val -> {
                 if (rule.validate(val)) {
                     this.valueWidget.setEditableColor(0xE0E0E0);
+                    screen.markValid(this);
                 } else {
                     this.valueWidget.setEditableColor(0xFF0000);
                     screen.markInvalid(this);
                 }
             });
+            this.children.add(this.valueWidget);
         }
 
         @Override
