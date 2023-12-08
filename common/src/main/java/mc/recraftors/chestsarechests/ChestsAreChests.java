@@ -133,14 +133,6 @@ public class ChestsAreChests {
 		}
 	}
 
-	public static void lidFlingEntity(Entity entity, Direction direction) {
-		int x = direction.getOffsetX();
-		int z = direction.getOffsetZ();
-		float horiz = ((GamerulesFloatProvider)entity.getWorld().getGameRules()).chests$getFloat(getLidHorizontalPower());
-		float vert = ((GamerulesFloatProvider)entity.getWorld().getGameRules()).chests$getFloat(getLidVerticalPower());
-		entity.addVelocity(-horiz*x, vert, -horiz*z);
-	}
-
 	public static boolean automatedContainerOpening(ServerWorld world, BlockPos pos, BlockState state, Direction direction) {
 		BlockPos target = pos.offset(direction, 1);
 		BlockEntity entity = world.getBlockEntity(target);
@@ -152,18 +144,30 @@ public class ChestsAreChests {
 		world.scheduleBlockTick(pos, world.getBlockState(pos).getBlock(), duration);
 	}
 
+	public static void lidFlingEntity(Entity entity, Direction direction, float verticalMultiplier, float horizontalMultiplier) {
+		int x = direction.getOffsetX();
+		int z = direction.getOffsetZ();
+		float horiz = ((GamerulesFloatProvider)entity.getWorld().getGameRules()).chests$getFloat(getLidHorizontalPower());
+		float vert = ((GamerulesFloatProvider)entity.getWorld().getGameRules()).chests$getFloat(getLidVerticalPower());
+		entity.addVelocity(horiz*x*horizontalMultiplier, vert*verticalMultiplier, -horiz*z*horizontalMultiplier);
+	}
+
 	public static void ejectAbove(Direction facing, BlockEntity entity) {
+		eject(facing.getOpposite(), entity, 1, 1, 0, 1, 0);
+	}
+
+	public static void ejectBelow(Direction facing, BlockEntity entity) {
+		eject(facing.getOpposite(), entity, 1, 1, 0, -1, 0);
+	}
+
+	public static void eject(Direction direction, BlockEntity entity, float verticalMultiplier, float horizontalMultiplier, int xOff, int yOff, int zOff) {
 		World world = entity.getWorld();
 		if (world == null) {
 			return;
 		}
-		if (!world.getGameRules().getBoolean(ChestsAreChests.getLidFling())) return;
-		world.getOtherEntities(null, new Box(entity.getPos().offset(Direction.UP, 1)),
-						e -> !e.isSpectator() && e.getType().isIn(FLINGABLE)
-				)
-				.forEach(e -> {
-					lidFlingEntity(e, facing);
-				}
-		);
+		if (!world.getGameRules().getBoolean(getLidFling())) return;
+		BlockPos pos = entity.getPos().offset(Direction.Axis.X, xOff).offset(Direction.Axis.Y, yOff).offset(Direction.Axis.Z, zOff);
+		world.getOtherEntities(null, new Box(pos), e -> !e.isSpectator() && e.getType().isIn(FLINGABLE))
+				.forEach(e -> lidFlingEntity(e, direction, verticalMultiplier, horizontalMultiplier));
 	}
 }
