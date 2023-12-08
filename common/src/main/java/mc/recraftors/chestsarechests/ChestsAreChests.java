@@ -165,7 +165,7 @@ public class ChestsAreChests {
 	}
 
 	public static void ejectBelow(Direction facing, BlockEntity entity) {
-		eject(facing.getOpposite(), entity, 1, 1, 0, -1, 0);
+		eject(facing.getOpposite(), entity, -1, 1, 0, -1, 0);
 	}
 
 	public static void eject(Direction direction, BlockEntity entity, float verticalMultiplier, float horizontalMultiplier, int xOff, int yOff, int zOff) {
