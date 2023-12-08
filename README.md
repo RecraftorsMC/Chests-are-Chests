@@ -49,10 +49,16 @@ Now the game will feel more natural, even just a little bit, won't you agree?
 **Implemented**
 * [Anner's Iron Chests](https://modrinth.com/mod/cyberanner-ironchest)
 * [Mythic Metals Decorations](https://modrinth.com/mod/mythicmetals-decorations)
+* [Reinforced Chests](https://modrinth.com/mod/reinforced-chests)
 
 **Possibilities**
-* [Iron Chests: Restocked](https://modrinth.com/mod/ironchests): _reported until further news since incompatible with base 1.19 despite all indications_
-* [Reinforced Chests](https://modrinth.com/mod/reinforced-chests): _reported until further news since incompatible with base 1.19 despite all indications_
+* [Iron Chests: Restocked](https://modrinth.com/mod/ironchests)
+* [Lootr](https://modrinth.com/mod/lootr)
+* [myLoot](https://modrinth.com/mod/myloot)
+* [More Chests](https://modrinth.com/mod/more-chests)
+* [More Chests Variants](https://modrinth.com/mod/more-chest-variants-lieonlion)
+* [Compact Storage](https://modrinth.com/mod/compact_storage)
+* [Spectrum](https://modrinth.com/mod/spectrum)
 
 ### Showcase
 
