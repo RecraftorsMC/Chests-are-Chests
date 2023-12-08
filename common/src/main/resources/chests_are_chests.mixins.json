@@ -13,7 +13,12 @@
     "GamerulesMixin",
     "GameRulesVisitorMixin",
     "ItemEntityMixin",
-    "ViewerCountManagerMixin"
+    "ViewerCountManagerMixin",
+    "compat.expanded_storage.present.BarrelBlockEntityMixin",
+    "compat.expanded_storage.present.BarrelBlockMixin",
+    "compat.expanded_storage.present.ChestBlockEntityMixin",
+    "compat.expanded_storage.present.ChestBlockEntityMixin$ManagerMixin",
+    "compat.expanded_storage.present.ChestBlockMixin"
   ],
   "client": [
     "ScreenClientAccessor"
