@@ -7,15 +7,13 @@ import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
 import java.util.List;
 import java.util.Set;
-import java.util.function.UnaryOperator;
 
 public final class Plugin implements IMixinConfigPlugin {
     private static final String COMPAT_PACKAGE_ROOT;
     private static final int COMPAT_PACKAGE_LENGTH;
     private static final String COMPAT_PRESENT_KEY = "present";
-
-    private static final UnaryOperator<Boolean> OK = t -> t;
-    private static final UnaryOperator<Boolean> NOT = t -> !t;
+    private static final String COMPAT_ABSENT_KEY = "absent";
+    private static final String COMPAT_ANY_KEY = "any";
 
     static {
         // Shorthand getting the plugin package to ensure not making trouble with other mixins
@@ -41,10 +39,10 @@ public final class Plugin implements IMixinConfigPlugin {
         String[] mixinPath = mixinClassName.split("\\.");
         // the id of the target mod
         String compatModId = mixinPath[COMPAT_PACKAGE_LENGTH];
-        // Whether the mixin is for when the mod is loaded
-        UnaryOperator<Boolean> f = mixinPath[COMPAT_PACKAGE_LENGTH+1].equals(COMPAT_PRESENT_KEY) ? OK : NOT;
-        // Only apply if the target mod is present
-        return f.apply(PreLaunchUtils.isModLoaded(compatModId));
+        // Apply accordingly of the mod's presence, absence, etc
+        if (mixinPath[COMPAT_PACKAGE_LENGTH+1].equals(COMPAT_PRESENT_KEY)) return PreLaunchUtils.isModLoaded(compatModId);
+        else if (mixinPath[COMPAT_PACKAGE_LENGTH+1].equals(COMPAT_ABSENT_KEY)) return !PreLaunchUtils.isModLoaded(compatModId);
+        else return (mixinPath[COMPAT_PACKAGE_LENGTH+1].equals(COMPAT_ANY_KEY));
     }
 
     @Override
