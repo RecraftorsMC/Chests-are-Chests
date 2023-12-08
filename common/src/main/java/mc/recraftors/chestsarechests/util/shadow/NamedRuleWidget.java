@@ -17,7 +17,7 @@ import java.util.List;
 @Environment(EnvType.CLIENT)
 public abstract class NamedRuleWidget extends EditGameRulesScreen.AbstractRuleWidget {
     private final List<OrderedText> name;
-    private final List<ClickableWidget> children;
+    protected final List<ClickableWidget> children;
     private final EditGameRulesScreen screen;
 
     @SuppressWarnings("resource")
