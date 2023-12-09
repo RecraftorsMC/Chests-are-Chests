@@ -51,7 +51,7 @@ Now the game will feel more natural, even just a little bit, won't you agree?
 * [Mythic Metals Decorations](https://modrinth.com/mod/mythicmetals-decorations)
 * [Reinforced Chests](https://modrinth.com/mod/reinforced-chests)
 
-**Possibilities**
+**Planned**
 * [Iron Chests: Restocked](https://modrinth.com/mod/ironchests)
 * [Lootr](https://modrinth.com/mod/lootr)
 * [myLoot](https://modrinth.com/mod/myloot)
