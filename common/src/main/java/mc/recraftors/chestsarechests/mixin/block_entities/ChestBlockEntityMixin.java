@@ -12,7 +12,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
@@ -83,6 +85,7 @@ public abstract class ChestBlockEntityMixin extends LootableContainerBlockEntity
         return (BooleanHolder) this.lidAnimator;
     }
 
+    @SuppressWarnings("DuplicatedCode")
     @Inject(method = "onScheduledTick", at = @At("HEAD"))
     private void tickHeadInjector(CallbackInfo ci) {
         ServerWorld w = (ServerWorld) this.getWorld();
@@ -90,6 +93,17 @@ public abstract class ChestBlockEntityMixin extends LootableContainerBlockEntity
         if (this.chests$isOpen() && container.chests$isForcedOpened(w) && !container.chests$shouldStayOpen(w)) {
             this.chests$forceClose();
         }
+        if (!this.chests$isOpen()) return;
+        if (!w.getGameRules().getBoolean(ChestsAreChests.getBarrelFall())) return;
+        if (!w.getGameRules().getBoolean(ChestsAreChests.getBarrelFallThrowableSpecial())) return;
+        BlockPos pos = this.getPos();
+        Box box = Box.of(pos.toCenterPos(), 1, .5, 1).offset(0, .75, 0);
+        if (!w.isSpaceEmpty(box)) return;
+        Direction dir = Direction.UP;
+        Vec3d outPos = pos.toCenterPos().add(0.75 * dir.getOffsetX(), 0.75 * dir.getOffsetY(), 0.75 * dir.getOffsetZ());
+        Vec3d velocity = new Vec3d(0.05 * dir.getOffsetX(), 0.05 * dir.getOffsetY(), 0.05 * dir.getOffsetZ());
+        this.chests$fallOut(w, dir, this, outPos, velocity);
+        this.stateManager.updateViewerCount(w, pos, w.getBlockState(pos));
     }
 
     @Mixin(targets = "net/minecraft/block/entity/ChestBlockEntity$1")
