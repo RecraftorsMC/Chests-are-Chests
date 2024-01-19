@@ -3,16 +3,14 @@ loaderVersion="[41,)"
 license="GNU GPL 3.0"
 issueTrackerURL="https://github.com/RecraftorsMC/Chests-are-Chests/issues"
 [[mods]]
-modId="chests_are_chests"
-version="${version}"
-displayName="chests are chests"
-displayURL="https://github.com/RecraftorsMC/Chests-are-Chests"
-logoFile="icon.png"
-authors="Recraftors Team, Nerjal Nosk"
-displayTest="IGNORE_SERVER_VERSION"
-description='''
-Allows items to fall into open containers
-'''
+   modId="chests_are_chests"
+   version="${version}"
+   displayName="chests are chests"
+   displayURL="https://github.com/RecraftorsMC/Chests-are-Chests"
+   logoFile="icon.png"
+   authors="Recraftors Team, Nerjal Nosk"
+   displayTest="IGNORE_SERVER_VERSION"
+   description="Allows items to fall into open containers"
 [[dependencies.chests_are_chests]]
    modId="forge"
    mandatory=true
