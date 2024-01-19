@@ -44,53 +44,154 @@ public interface FallInContainer {
             Direction.NORTH, VoxelShapes.union(INSIDE, BESIDE_NEGATIVE_Z)
     );
 
+    /**
+     * Handles item insertion, using other methods.
+     * @param pos The current container's position.
+     * @param state The current container's block state.
+     * @param entity The item to try to insert.
+     * @return Whether the item could be inserted.
+     */
     @ApiStatus.NonExtendable
     default boolean chests$fallIn(BlockPos pos, BlockState state, ItemEntity entity) {
         if (!state.hasBlockEntity() || !chests$isOpen()) return false;
-        if (VoxelShapes.matchesAnywhere(VoxelShapes.cuboid(entity.getBoundingBox().offset(-pos.getX(), -pos.getY(), -pos.getZ())), chests$InputAreaShape(), BooleanBiFunction.AND)) {
+        if (VoxelShapes.matchesAnywhere(
+                VoxelShapes.cuboid(entity.getBoundingBox().offset(-pos.getX(), -pos.getY(), -pos.getZ())),
+                chests$InputAreaShape(), BooleanBiFunction.AND)) {
             return chests$tryInsertion(entity);
         }
         return false;
     }
 
+    /**
+     * Attempts inserting the provided item entity in the current container.
+     * <p>
+     * Process can be eased by making use of {@link #chests$inventoryInsertion(DefaultedList, ItemEntity, BiConsumer)}.
+     * <p>
+     * Returns whether the item entity was completely inserted (<i>consumed</i>).
+     * @param entity The item entity to attempt insertion of in the current container.
+     * @return Whether the item entity was completely inserted.
+     * @see mc.recraftors.chestsarechests.mixin.block_entities.ChestBlockEntityMixin#chests$tryInsertion(ItemEntity)
+     */
     default boolean chests$tryInsertion(ItemEntity entity) {
         return false;
     }
 
+    /**
+     * Returns whether the current container is open or not.
+     * @return Whether the current container is open or not.
+     */
     default boolean chests$isOpen() {
         return false;
     }
 
+    /**
+     * Returns the current container's input shape.
+     * <p>
+     * Should be centered around a 0-0-0 block, offset is managed outside of method.
+     * @return The current container's input shape.
+     * @see mc.recraftors.chestsarechests.mixin.block_entities.BarrelBlockEntityMixin#chests$InputAreaShape()
+     */
     default VoxelShape chests$InputAreaShape() {
         return EMPTY;
     }
 
+    /**
+     * Force-opens the current container. Executed when an empty dispenser fires at the current container.
+     * <p>
+     * Should be executed (directly or not) by {@link #chests$tryForceOpen(BlockState)}.
+     * @param world The world (dimension) in which the container is.
+     * @param at The block position of the container.
+     * @param from The block state issuing the force-opening attempt. (Usually, a dispenser block state)
+     */
     default void chests$forceOpen(ServerWorld world, BlockPos at, BlockState from) {}
 
+    /**
+     * Attempts force-opening of the current container. Executed when an empty dispenser fires at the current container
+     * if it is closed.
+     * <p>
+     * Allows to add a check layer between force-opening attempt and actual realisation.
+     * {@link #chests$forceOpen(ServerWorld, BlockPos, BlockState)} is expected to be executed from this method, but
+     * full opening implementation can be done in this method, leaving
+     * {@link #chests$forceOpen(ServerWorld, BlockPos, BlockState)} at its default (empty) implementation.
+     * @param from The block state issuing the force-opening attempt. (Usually, a dispenser block state)
+     * @return Whether the block could be force-opened. By default, {@code false}.
+     */
     default boolean chests$tryForceOpen(BlockState from) {
         return false;
     }
 
+    /**
+     * Attempts force-closing the current container. Executed when an empty dispenser fires at the current container if
+     * it is open.
+     * @return Whether the block could be force-closed. By default, {@code false}.
+     */
     default boolean chests$forceClose() {
         return false;
     }
 
+    /**
+     * Returns the current container's {@link BlockOpenableContainer}. Can either be the container itself, or some
+     * inner attribute. Usually also is the block state manager. (ViewerCountManager)
+     * <p>
+     * Only used internally of the {@link FallInContainer} implementation. Can be left unimplemented if not used.
+     * <p>
+     * Used by the vanilla {@link mc.recraftors.chestsarechests.mixin.block_entities.ChestBlockEntityMixin chest} /
+     * {@link mc.recraftors.chestsarechests.mixin.block_entities.BarrelBlockEntityMixin barrel} implementations,
+     * hence easing custom implementation if extending the vanilla chest or barrel classes.
+     * @return The current container's {@link BlockOpenableContainer}.
+     */
     default @Nullable BlockOpenableContainer chests$getContainer() {
         return null;
     }
 
+    /**
+     * Returns the current container's {@link BooleanHolder}. Can either be the container itself, or some inner
+     * attribute. Usually also holds the open property. (LidFlingAnimator)
+     * <p>
+     * Only used internally of the {@link FallInContainer container} implementation.
+     * Can be left unimplemented if not used.
+     * <p>
+     * Used by the vanilla {@link mc.recraftors.chestsarechests.mixin.block_entities.ChestBlockEntityMixin chest}
+     * implementation, hence easing custom implementation if extending the vanilla chest or barrel classes.
+     * @return The current container's {@link BooleanHolder}.
+     */
     default @Nullable BooleanHolder chests$getBooleanHolder() {
         return null;
     }
 
+    /**
+     * Returns the current container's item fall update map. It is only used for the
+     * {@link ChestsAreChests#BARREL_FALL_RULE_ID} function, in order to optimise running fall methods
+     * multiple times on stacks that wouldn't be affected in the current context.
+     * <p>
+     * No inner use is needed, and any should be avoided. All use is managed in
+     * {@link #chests$fallOut(World, Direction, Inventory, Vec3d, Vec3d)}.
+     * <p>
+     * Needs to be a custom, consistent but non-persistent integer-to-integer map. Return {@code null} to
+     * prevent any item fall.
+     * @return The current container's item fall update map.
+     */
     default Map<Integer, Integer> chests$getFallUpdateMap() {
         return new HashMap<>();
     }
 
+    /**
+     * Makes items fall out... Or fly out, depending on the items.
+     * <p>
+     * Should be called in block entity tick.
+     * @param world The container's world.
+     * @param direction The opening direction.
+     * @param inventory The container's inventory.
+     * @param pos The container's opening position.
+     * @param velocity The base item fall velocity.
+     */
     @ApiStatus.NonExtendable
     default void chests$fallOut(World world, Direction direction, Inventory inventory, Vec3d pos, Vec3d velocity) {
         int m = inventory.size();
         Map<Integer, Integer> map = chests$getFallUpdateMap();
+        if (map == null) {
+            return;
+        }
         for (int i = 0; i < m; i++) {
             ItemStack stack = inventory.getStack(i);
             int h = ChestsAreChests.itemStackCustomHash(stack);
