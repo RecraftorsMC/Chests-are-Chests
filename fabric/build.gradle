@@ -30,7 +30,6 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
 
     // compatibility dependencies
-    modCompileOnly "maven.modrinth:cyberanner-ironchest:${project.ironchests_version}"
     modCompileOnly "maven.modrinth:mythicmetals-decorations:${project.mythicmetals_decorations_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
