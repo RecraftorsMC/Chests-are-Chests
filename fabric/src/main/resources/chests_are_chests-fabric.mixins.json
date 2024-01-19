@@ -7,7 +7,8 @@
   "mixins": [
     "compat.mythicmetals_decorations.present.MythicChestBlockEntityMixin",
     "compat.mythicmetals_decorations.present.MythicChestBlockEntityMixin$StateManagerMixin",
-    "compat.mythicmetals_decorations.present.MythicChestBlockMixin"
+    "compat.mythicmetals_decorations.present.MythicChestBlockMixin",
+    "compat.spectrum.present.CloakedFloatItemMixin"
   ],
   "client": [
   ],
