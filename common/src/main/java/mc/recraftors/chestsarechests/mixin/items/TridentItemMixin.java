@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.Mixin;
 public abstract class TridentItemMixin implements ContainerItemHelper {
     @Override
     public boolean chests$onOpenTick(ItemStack stack, FallInContainer container, Direction direction, World world, Vec3d pos, Vec3d velocity) {
-        if (direction != getFallDirection(stack)) return false;
+        if (direction != chests$getFallDirection(stack)) return false;
         TridentEntity entity = new TridentEntity(world, null, stack);
         entity.setPitch(-90f);
         entity.setVelocity(velocity.multiply(2));
