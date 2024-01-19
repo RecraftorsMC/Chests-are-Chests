@@ -25,6 +25,8 @@ import net.minecraft.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Objects;
+
 public class ChestsAreChests {
 	public static final String MOD_ID = "chests_are_chests";
 	public static final String BARREL_FALL_RULE_ID = "chests.barrelFall";
@@ -192,5 +194,15 @@ public class ChestsAreChests {
 		int i = ((RegistryIndexAccessor<Item>) Registries.ITEM).chests$getEntryIndex(item);
 		// Should be unique enough
 		return 197 * i + 19 * stack.getCount() + (stack.hasNbt() ? 7 : 1);
+	}
+
+	public static <T> boolean isInArray(T value, T[] array) {
+		if (array == null) {
+			return false;
+		}
+        for (T t : array) {
+            if (Objects.equals(value, t)) return true;
+        }
+		return false;
 	}
 }

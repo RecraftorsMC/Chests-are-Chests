@@ -17,8 +17,8 @@ public abstract class CloakedFloatItemMixin extends FloatItem implements Contain
     }
 
     @Override
-    public Direction chests$getFallDirection(ItemStack stack) {
-        return this.getGravityMod() < 0 ? Direction.DOWN : Direction.UP;
+    public Direction[] chests$getFallDirection(ItemStack stack) {
+        return new Direction[]{(this.getGravityMod() < 0 ? Direction.DOWN : Direction.UP)};
     }
 
     @Override
