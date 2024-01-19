@@ -1,5 +1,6 @@
 package mc.recraftors.chestsarechests.mixin.items;
 
+import mc.recraftors.chestsarechests.ChestsAreChests;
 import mc.recraftors.chestsarechests.util.ContainerItemHelper;
 import mc.recraftors.chestsarechests.util.FallInContainer;
 import net.minecraft.entity.projectile.TridentEntity;
@@ -14,7 +15,7 @@ import org.spongepowered.asm.mixin.Mixin;
 public abstract class TridentItemMixin implements ContainerItemHelper {
     @Override
     public boolean chests$onOpenTick(ItemStack stack, FallInContainer container, Direction direction, World world, Vec3d pos, Vec3d velocity) {
-        if (direction != chests$getFallDirection(stack)) return false;
+        if (!ChestsAreChests.isInArray(direction, chests$getFallDirection(stack))) return false;
         TridentEntity entity = new TridentEntity(world, null, stack);
         entity.setPitch(-90f);
         entity.setVelocity(velocity.multiply(2));
