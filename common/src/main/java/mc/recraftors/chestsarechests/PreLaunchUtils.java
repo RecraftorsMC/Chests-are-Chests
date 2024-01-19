@@ -11,4 +11,10 @@ public final class PreLaunchUtils {
     public static boolean isModLoaded(String modId) {
         throw new UnsupportedOperationException();
     }
+
+    @Contract
+    @ExpectPlatform
+    public static boolean modHasAuthor(String modId, String author) {
+        throw new UnsupportedOperationException();
+    }
 }
