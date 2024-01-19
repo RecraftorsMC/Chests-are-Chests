@@ -36,6 +36,7 @@ public abstract class BarrelBlockEntityMixin extends LootableContainerBlockEntit
         super(blockEntityType, blockPos, blockState);
     }
 
+    @SuppressWarnings("DuplicatedCode")
     @Inject(
             method = "tick",
             at = @At(
