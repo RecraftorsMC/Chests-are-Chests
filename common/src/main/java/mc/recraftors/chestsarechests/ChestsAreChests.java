@@ -3,13 +3,16 @@ package mc.recraftors.chestsarechests;
 import mc.recraftors.chestsarechests.util.FallInContainer;
 import mc.recraftors.chestsarechests.util.FloatRule;
 import mc.recraftors.chestsarechests.util.GamerulesFloatProvider;
+import mc.recraftors.chestsarechests.util.RegistryIndexAccessor;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.world.ServerWorld;
@@ -25,14 +28,16 @@ import org.apache.logging.log4j.Logger;
 public class ChestsAreChests {
 	public static final String MOD_ID = "chests_are_chests";
 	public static final String BARREL_FALL_RULE_ID = "chests.barrelFall";
+	public static final String BARREL_FALL_SPECIAL_THROWABLE_RULE_ID = "chests.barrelFall.throwableSpecial";
 	public static final String DISPENSER_OPEN_RULE_ID = "chests.dispenserOpen";
 	public static final String DISPENSER_OPEN_DURATION_RULE_ID = "chests.dispenserOpen.duration";
-	public static final String INSERT_OPEN_ID = "chests.insertOpen";
+	public static final String INSERT_OPEN_RULE_ID = "chests.insertOpen";
 	public static final String CHEST_LID_FLING_RULE_ID = "chests.lidFling";
 	public static final String CHEST_LID_HORIZONTAL_POWER_RULE_ID = "chests.lidFling.horizontalPower";
 	public static final String CHESTS_LID_VERTICAL_POWER_RULE_ID = "chests.lidFling.verticalPower";
 	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 	private static GameRules.Key<GameRules.BooleanRule> barrelFall;
+	private static GameRules.Key<GameRules.BooleanRule> barrelFallThrowableSpecial;
 	private static GameRules.Key<GameRules.BooleanRule> dispenserOpen;
 	private static GameRules.Key<GameRules.IntRule> dispenserOpenDuration;
 	private static GameRules.Key<GameRules.BooleanRule> insertOpen;
@@ -40,9 +45,14 @@ public class ChestsAreChests {
 	private static GameRules.Key<FloatRule> lidHorizontalPower;
 	private static GameRules.Key<FloatRule> lidVerticalPower;
 	public static final TagKey<EntityType<?>> FLINGABLE = TagKey.of(RegistryKeys.ENTITY_TYPE, new Identifier(MOD_ID, "flingable"));
+	public static final TagKey<Item> SPECIAL_FALL = TagKey.of(RegistryKeys.ITEM, new Identifier(MOD_ID, "special_fall"));
 
 	public static GameRules.Key<GameRules.BooleanRule> getBarrelFall() {
 		return barrelFall;
+	}
+
+	public static GameRules.Key<GameRules.BooleanRule> getBarrelFallThrowableSpecial() {
+		return barrelFallThrowableSpecial;
 	}
 
 	public static GameRules.Key<GameRules.BooleanRule> getDispenserOpen() {
@@ -72,6 +82,12 @@ public class ChestsAreChests {
 	public static void setBarrelFall(GameRules.Key<GameRules.BooleanRule> ruleKey) {
 		if (barrelFall == null) {
 			barrelFall = ruleKey;
+		}
+	}
+
+	public static void setBarrelFallThrowableSpecial(GameRules.Key<GameRules.BooleanRule> ruleKey) {
+		if (barrelFallThrowableSpecial == null) {
+			barrelFallThrowableSpecial = ruleKey;
 		}
 	}
 
@@ -169,5 +185,12 @@ public class ChestsAreChests {
 		BlockPos pos = entity.getPos().offset(Direction.Axis.X, xOff).offset(Direction.Axis.Y, yOff).offset(Direction.Axis.Z, zOff);
 		world.getOtherEntities(null, new Box(pos), e -> !e.isSpectator() && e.getType().isIn(FLINGABLE))
 				.forEach(e -> lidFlingEntity(e, direction, verticalMultiplier, horizontalMultiplier));
+	}
+
+	public static int itemStackCustomHash(ItemStack stack) {
+		Item item = stack.getItem();
+		int i = ((RegistryIndexAccessor<Item>) Registries.ITEM).chests$getEntryIndex(item);
+		// Should be unique enough
+		return 197 * i + 19 * stack.getCount() + (stack.hasNbt() ? 7 : 1);
 	}
 }

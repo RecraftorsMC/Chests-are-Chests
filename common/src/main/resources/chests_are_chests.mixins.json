@@ -4,24 +4,34 @@
   "package": "mc.recraftors.chestsarechests.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "BarrelBlockEntityMixin",
-    "ChestBlockEntityMixin",
-    "ChestBlockEntityMixin$StateManagerMixin",
-    "ChestLidAnimatorMixin",
-    "DispenserBlockMixin",
-    "EditGamerulesScreenAnonymousVisitorMixin",
-    "GamerulesMixin",
-    "GameRulesVisitorMixin",
     "ItemEntityMixin",
-    "ViewerCountManagerMixin",
+    "RegistryMixin",
+    "SimpleRegistryMixin",
+    "block_entities.BarrelBlockEntityMixin",
+    "block_entities.ChestBlockEntityMixin",
+    "block_entities.ChestBlockEntityMixin$StateManagerMixin",
+    "block_entities.ChestLidAnimatorMixin",
+    "block_entities.DispenserBlockMixin",
+    "block_entities.ViewerCountManagerMixin",
     "compat.expanded_storage.present.BarrelBlockEntityMixin",
     "compat.expanded_storage.present.BarrelBlockMixin",
     "compat.expanded_storage.present.ChestBlockEntityMixin",
     "compat.expanded_storage.present.ChestBlockEntityMixin$ManagerMixin",
-    "compat.expanded_storage.present.ChestBlockMixin"
+    "compat.expanded_storage.present.ChestBlockMixin",
+    "compat.ironchests.present.GenericChestEntityMixin",
+    "gamerules.EditGamerulesScreenAnonymousVisitorMixin",
+    "gamerules.GamerulesMixin",
+    "gamerules.GameRulesVisitorMixin",
+    "items.ArrowItemMixin",
+    "items.EggItemMixin",
+    "items.ItemMixin",
+    "items.SnowballItemMixin",
+    "items.SpectralArrowItemMixin",
+    "items.ThrowablePotionMixin",
+    "items.TridentItemMixin"
   ],
   "client": [
-    "ScreenClientAccessor"
+    "gamerules.ScreenClientAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
