@@ -1,9 +1,6 @@
 package mc.recraftors.chestsarechests;
 
-import mc.recraftors.chestsarechests.util.FallInContainer;
-import mc.recraftors.chestsarechests.util.FloatRule;
-import mc.recraftors.chestsarechests.util.GamerulesFloatProvider;
-import mc.recraftors.chestsarechests.util.RegistryIndexAccessor;
+import mc.recraftors.chestsarechests.util.*;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
@@ -176,6 +173,10 @@ public class ChestsAreChests {
 
 	public static void ejectBelow(Direction facing, BlockEntity entity) {
 		eject(facing.getOpposite(), entity, -1, 1, 0, -1, 0);
+	}
+
+	public static void eject(Direction direction, BlockEntity entity, LidFlingHelper helper) {
+		eject(direction, entity, helper.chests$verticalFactor(), helper.chests$horizontalFactor(), helper.chests$xOff(), helper.chests$yOff(), helper.chests$zOff());
 	}
 
 	public static void eject(Direction direction, BlockEntity entity, float verticalMultiplier, float horizontalMultiplier, int xOff, int yOff, int zOff) {
