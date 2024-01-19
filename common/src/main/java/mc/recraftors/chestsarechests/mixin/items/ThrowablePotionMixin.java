@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.Mixin;
 public abstract class ThrowablePotionMixin implements ContainerItemHelper {
     @Override
     public boolean chests$onOpenTick(ItemStack stack, FallInContainer container, Direction direction, World world, Vec3d pos, Vec3d velocity) {
-        if (direction != getFallDirection(stack)) return false;
+        if (direction != chests$getFallDirection(stack)) return false;
         for (int i = 0; i < stack.getCount(); i++) {
             PotionEntity entity = new PotionEntity(world, pos.x, pos.y, pos.z);
             entity.setItem(stack.copyWithCount(1));
