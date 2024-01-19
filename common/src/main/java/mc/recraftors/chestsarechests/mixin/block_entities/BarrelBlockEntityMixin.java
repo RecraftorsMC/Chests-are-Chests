@@ -15,10 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraft.util.shape.VoxelShape;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -58,9 +55,10 @@ public abstract class BarrelBlockEntityMixin extends LootableContainerBlockEntit
         if (!state.getProperties().contains(Properties.FACING)) return;
         Direction dir = state.get(Properties.FACING);
         if (dir == Direction.DOWN && w.getGameRules().getBoolean(ChestsAreChests.getBarrelFallThrowableSpecial())) {
-            Box box = Box.of(pos.toCenterPos(), 1, .5, 1).offset(0, -.75, 0);
+            Vec3d center = Vec3d.ofCenter(new Vec3i(pos.getX(), pos.getY(), pos.getZ()));
+            Box box = Box.of(center, 1, .5, 1).offset(0, -.75, 0);
             if (w.isSpaceEmpty(box)) {
-                Vec3d outPos = pos.toCenterPos().add(0.75 * dir.getOffsetX(), 0.75 * dir.getOffsetY(), 0.75 * dir.getOffsetZ());
+                Vec3d outPos = center.add(0.75 * dir.getOffsetX(), 0.75 * dir.getOffsetY(), 0.75 * dir.getOffsetZ());
                 Vec3d velocity = new Vec3d(0.05 * dir.getOffsetX(), 0.05 * dir.getOffsetY(), 0.05 * dir.getOffsetZ());
                 this.chests$fallOut(w, dir, this, outPos, velocity);
                 this.stateManager.updateViewerCount(world, pos, state);

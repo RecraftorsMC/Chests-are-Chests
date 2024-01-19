@@ -18,7 +18,7 @@ public abstract class ThrowablePotionMixin implements ContainerItemHelper {
         if (!ChestsAreChests.isInArray(direction, chests$getFallDirection(stack))) return false;
         for (int i = 0; i < stack.getCount(); i++) {
             PotionEntity entity = new PotionEntity(world, pos.x, pos.y, pos.z);
-            entity.setItem(stack.copyWithCount(1));
+            entity.setItem(stack.copy());
             entity.setVelocity(velocity.multiply(1, 2, 1));
             world.spawnEntity(entity);
         }

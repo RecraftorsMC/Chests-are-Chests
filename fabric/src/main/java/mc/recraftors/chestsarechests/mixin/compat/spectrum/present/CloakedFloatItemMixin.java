@@ -18,12 +18,12 @@ public abstract class CloakedFloatItemMixin extends FloatItem implements Contain
 
     @Override
     public Direction[] chests$getFallDirection(ItemStack stack) {
-        return new Direction[]{(this.getGravityMod() < 0 ? Direction.DOWN : Direction.UP)};
+        return new Direction[]{(this.getGravityModForItemEntity() < 0 ? Direction.DOWN : Direction.UP)};
     }
 
     @Override
     public boolean chests$onOpenTick(ItemStack stack, FallInContainer container, Direction direction, World world, Vec3d pos, Vec3d velocity) {
-        float f = -(1 / this.getGravityMod());
+        float f = (float) -(1 / this.getGravityModForItemEntity());
         return ContainerItemHelper.super.chests$onOpenTick(stack, container, direction, world, pos, velocity.multiply(1, f, 1));
     }
 }

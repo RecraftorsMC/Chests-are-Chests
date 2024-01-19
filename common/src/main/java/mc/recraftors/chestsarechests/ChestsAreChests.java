@@ -199,7 +199,7 @@ public class ChestsAreChests {
 
 	public static int itemStackCustomHash(ItemStack stack) {
 		Item item = stack.getItem();
-		int i = ((RegistryIndexAccessor<Item>) Registries.ITEM).chests$getEntryIndex(item);
+		int i = ((RegistryIndexAccessor<Item>) Registry.ITEM).chests$getEntryIndex(item);
 		// Should be unique enough
 		return 197 * i + 19 * stack.getCount() + (stack.hasNbt() ? 7 : 1);
 	}

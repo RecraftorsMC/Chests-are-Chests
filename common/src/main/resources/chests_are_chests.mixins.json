@@ -18,7 +18,6 @@
     "compat.expanded_storage.present.ChestBlockEntityMixin",
     "compat.expanded_storage.present.ChestBlockEntityMixin$ManagerMixin",
     "compat.expanded_storage.present.ChestBlockMixin",
-    "compat.ironchests.present.GenericChestEntityMixin",
     "gamerules.EditGamerulesScreenAnonymousVisitorMixin",
     "gamerules.GamerulesMixin",
     "gamerules.GameRulesVisitorMixin",
