@@ -28,9 +28,14 @@ Now the game will feel more natural, even just a little bit, won't you agree?
 * Making item fall from open-from-below containers
   * default: disabled
   * gamerule: `chests.barrelFall`
+  * Special item fall (e.g. snowballs falling as actual thrown snowballs)
+    * default: enabled
+    * gamerule: `chests.barrelFall.throwableSpecial`
+    * item tag: `#chests_are_chests:special_fall`
 * Making chest lids throw items
   * default: disabled
   * gamerule: `chests.lidFling`
+  * entity type tag: `#chests_are_chests:flingable`
   * Horizontal flinging velocity
     * default: 0.25
     * gamerule: `chests.lidFling.horizontalPower`
@@ -70,6 +75,8 @@ that we have no need to keep our own compatibility.
 
 ### Make your own
 
+#### Container implementation
+
 The mod tweaks the block entities' and item entities' behaviours.
 In order to implement compatibility with this mod, you need your custom block entity to implement
 the `mc.recraftors.chestsarechests.util.FallInContainer` interface.
@@ -79,16 +86,44 @@ or `mc.recraftors.chestsarechests.util.BooleanHolder`, which you can either use 
 if you already extend the vanilla chest or barrel classes.
 
 Don't hesitate to look at the
-[chest](./common/src/main/java/mc/recraftors/chestsarechests/mixin/block_entities/ChestBlockEntityMixin.java)
-and [barrel](./common/src/main/java/mc/recraftors/chestsarechests/mixin/block_entities/BarrelBlockEntityMixin.java)
+[chest](common/src/main/java/mc/recraftors/chestsarechests/mixin/block_entities/ChestBlockEntityMixin.java)
+and [barrel](common/src/main/java/mc/recraftors/chestsarechests/mixin/block_entities/BarrelBlockEntityMixin.java)
 implementations for a reference of how to handle block opening and orientation within the provided methods.
 
 Also don't fear about more methods appearing with updates and your mod not implementing them, causing issues.
 No methods are planned for deletion, or would include a change of primary version. And all new method
 will _always_ come with a default implementation, to avoid pointless issues.
 
-#### Example
+#### Item implementation
+
+The mod enables for some item (registered in the appropriate item tag) to have a custom behaviour upon "falling"
+from a container. In order to do that, the item itself must implement the
+`mc.recraftors.chestsarechests.util.ContainerItemHelper` interface.
+
+This interface comes up with two methods to be implemented. The first one, optional, indicates the item fall directions.
+This allows to specify on which open side of a container can the item come out. (e.g. upwards-gravitated items may
+specify an upward fall direction)
+
+By default, this first method will return `DOWN`.
+
+The second one makes the actual implementation of a special fall behaviour. It should use the first method to know
+whether to run it or not, and execute what is intended. This method's return value indicates whether the item stack
+fell (and theoretically is consumed), or not, and therefore shouldn't be bothered with attempting to make it fall
+in the same direction, to avoid causing more runtime computing stress.
+
+Don't hesitate to look at the
+[arrow](common/src/main/java/mc/recraftors/chestsarechests/mixin/items/ArrowItemMixin.java) or
+[snowball](common/src/main/java/mc/recraftors/chestsarechests/mixin/items/SnowballItemMixin.java) implementations
+for a reference of how to handle special item fall.
+
+Then again, don't fear about more methods appearing with updates, for all new one will then again include a default
+implementation, if possible based on already existing methods.
+
+#### Examples
 Up to date with version **0.5**
+
+<details>
+<summary>Container implementation</summary>
 
 ```java
 public class MyCustomBlockEntity extends BlockEntity implements FallInContainer {
@@ -143,8 +178,28 @@ public class MyCustomBlockEntity extends BlockEntity implements FallInContainer 
         ChestsAreChests.ejectAbove(Direction.UP, this);
     }
 }
-
 ```
+</details>
+
+<details>
+<summary>Item implementation</summary>
+
+```java
+public class MyCustomItem extends Item implements ContainerItemHelper {
+    public Direction[] chests$getFallDirection(ItemStack stack) {
+        return new Direction[]{Directions.UP};
+    }
+    
+    public boolean defaultOnOpenTick(ItemStack stack, FallInContainer container, Direction direction, World world, Vec3d pos, Vec3d velocity) {
+        if (!ChestsAreChests.isInArray(direction, chests$getFallDirection(stack))) return false;
+        MyGravitatedEntity entity = new MyGravitatedEntity(world, pos.x, pos.y, pos.z, stack.copy());
+        entity.setVelocity(velocity);
+        world.spawnEntity(entity);
+        return true;
+    }
+}
+```
+</details>
 
 ## Showcase
 
