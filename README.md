@@ -61,10 +61,10 @@ that we have no need to keep our own compatibility.
 * [Anner's Iron Chests](https://modrinth.com/mod/cyberanner-ironchest)
 * [Mythic Metals Decorations](https://modrinth.com/mod/mythicmetals-decorations)
 * [Reinforced Chests](https://modrinth.com/mod/reinforced-chests)
+* [Spectrum](https://modrinth.com/mod/spectrum)
 
 #### Being worked on
 * [Lootr](https://modrinth.com/mod/lootr)
-* [Spectrum](https://modrinth.com/mod/spectrum)
 
 #### Planned
 * [Iron Chests: Restocked](https://modrinth.com/mod/ironchests)

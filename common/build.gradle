@@ -3,7 +3,6 @@ dependencies {
     // Do NOT use other classes from fabric loader
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modCompileOnly "maven.modrinth:expanded-storage:${project.expanded_storage_version}"
-    modCompileOnly "maven.modrinth:cyberanner-ironchest:${project.ironchests_version}"
 }
 
 architectury {
