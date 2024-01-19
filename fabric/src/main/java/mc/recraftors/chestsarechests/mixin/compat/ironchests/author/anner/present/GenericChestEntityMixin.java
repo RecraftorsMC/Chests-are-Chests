@@ -1,4 +1,4 @@
-package mc.recraftors.chestsarechests.mixin.compat.ironchests.present;
+package mc.recraftors.chestsarechests.mixin.compat.ironchests.author.anner.present;
 
 import anner.ironchest.blocks.blockentities.GenericChestEntity;
 import mc.recraftors.chestsarechests.ChestsAreChests;
