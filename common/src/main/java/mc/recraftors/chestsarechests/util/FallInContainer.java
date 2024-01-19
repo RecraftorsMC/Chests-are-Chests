@@ -22,6 +22,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
+/**
+ * Base container interface to be used for any container that should either
+ * allow items falling in, falling out, or getting flung away.
+ */
 public interface FallInContainer {
     VoxelShape EMPTY = Block.createCuboidShape(0, 0, 0, 0, 0, 0);
     VoxelShape INSIDE = Block.createCuboidShape(0, 0, 0, 16, 16, 16);

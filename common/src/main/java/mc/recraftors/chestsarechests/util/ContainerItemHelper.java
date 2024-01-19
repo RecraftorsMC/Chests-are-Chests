@@ -7,6 +7,9 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+/**
+ * Utility class for items with special fall-from-container behaviour.
+ */
 public interface ContainerItemHelper {
     default boolean chests$onOpenTick(ItemStack stack, FallInContainer container, Direction direction, World world, Vec3d pos, Vec3d velocity) {
         return false;

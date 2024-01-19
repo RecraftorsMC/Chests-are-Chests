@@ -18,6 +18,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+/**
+ * Custom float implementation of a gamerule.
+ * Mimics the Integer gamerule, to ensure vanilla compatibility.
+ */
 public class FloatRule extends GameRules.Rule<FloatRule> {
     private float value;
 
