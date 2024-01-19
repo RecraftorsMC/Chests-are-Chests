@@ -15,6 +15,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -43,6 +44,7 @@ public interface FallInContainer {
             Direction.NORTH, VoxelShapes.union(INSIDE, BESIDE_NEGATIVE_Z)
     );
 
+    @ApiStatus.NonExtendable
     default boolean chests$fallIn(BlockPos pos, BlockState state, ItemEntity entity) {
         if (!state.hasBlockEntity() || !chests$isOpen()) return false;
         if (VoxelShapes.matchesAnywhere(VoxelShapes.cuboid(entity.getBoundingBox().offset(-pos.getX(), -pos.getY(), -pos.getZ())), chests$InputAreaShape(), BooleanBiFunction.AND)) {
@@ -81,13 +83,14 @@ public interface FallInContainer {
         return null;
     }
 
-    default Map<Integer, Integer> getFallUpdateMap() {
+    default Map<Integer, Integer> chests$getFallUpdateMap() {
         return new HashMap<>();
     }
 
+    @ApiStatus.NonExtendable
     default void chests$fallOut(World world, Direction direction, Inventory inventory, Vec3d pos, Vec3d velocity) {
         int m = inventory.size();
-        Map<Integer, Integer> map = getFallUpdateMap();
+        Map<Integer, Integer> map = chests$getFallUpdateMap();
         for (int i = 0; i < m; i++) {
             ItemStack stack = inventory.getStack(i);
             int h = ChestsAreChests.itemStackCustomHash(stack);
