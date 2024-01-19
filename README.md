@@ -67,11 +67,15 @@ that we have no need to keep our own compatibility.
 * [Lootr](https://modrinth.com/mod/lootr)
 
 #### Planned
-* [Iron Chests: Restocked](https://modrinth.com/mod/ironchests)
 * [myLoot](https://modrinth.com/mod/myloot)
 * [More Chests](https://modrinth.com/mod/more-chests)
 * [More Chests Variants](https://modrinth.com/mod/more-chest-variants-lieonlion)
 * [Compact Storage](https://modrinth.com/mod/compact_storage)
+
+#### Internally refused
+* [Iron Chests: Restocked](https://modrinth.com/mod/ironchests)
+  Due to mod author names wrongly registered, this mod cannot be easily be dealt with.
+  Hence, it has been decided no to attempt implementing builtin compatibility.
 
 ### Make your own
 
