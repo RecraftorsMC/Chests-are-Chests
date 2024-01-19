@@ -14,6 +14,10 @@ import net.minecraft.text.Text;
 
 import java.util.List;
 
+/**
+ * Accessible shadow clone of the vanilla gamerule widget.
+ * Allows for easy display of custom gamerule types.
+ */
 @Environment(EnvType.CLIENT)
 public abstract class NamedRuleWidget extends EditGameRulesScreen.AbstractRuleWidget {
     private final List<OrderedText> name;

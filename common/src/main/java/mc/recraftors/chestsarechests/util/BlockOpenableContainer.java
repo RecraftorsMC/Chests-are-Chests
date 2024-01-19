@@ -9,6 +9,10 @@ import net.minecraft.world.World;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Container state manager utility mixin. To be used in {@link FallInContainer}
+ * @see FallInContainer
+ */
 public interface BlockOpenableContainer {
     default boolean chests$openContainerBlock(ServerWorld world, BlockPos pos, BlockState state, FallInContainer container) {
         return false;
