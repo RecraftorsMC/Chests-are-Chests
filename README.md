@@ -61,6 +61,7 @@ that we have no need to keep our own compatibility.
 * [Anner's Iron Chests](https://modrinth.com/mod/cyberanner-ironchest)
 * [Mythic Metals Decorations](https://modrinth.com/mod/mythicmetals-decorations)
 * [Reinforced Chests](https://modrinth.com/mod/reinforced-chests)
+* [Expanded Storage](https://modrinth.com/expanded-storage)
 * [Spectrum](https://modrinth.com/mod/spectrum)
 
 #### Being worked on
