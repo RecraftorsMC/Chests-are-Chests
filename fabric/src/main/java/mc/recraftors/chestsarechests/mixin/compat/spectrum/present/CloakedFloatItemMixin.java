@@ -10,7 +10,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 
-@Mixin(CloakedFloatItem.class)
+@Mixin(value = CloakedFloatItem.class, remap = false)
 public abstract class CloakedFloatItemMixin extends FloatItem implements ContainerItemHelper {
     CloakedFloatItemMixin(Settings settings, float gravityMod) {
         super(settings, gravityMod);
