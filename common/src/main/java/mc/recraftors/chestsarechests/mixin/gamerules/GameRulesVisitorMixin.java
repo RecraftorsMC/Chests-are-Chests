@@ -1,4 +1,4 @@
-package mc.recraftors.chestsarechests.mixin;
+package mc.recraftors.chestsarechests.mixin.gamerules;
 
 import mc.recraftors.chestsarechests.util.GameRulesVisitor;
 import net.minecraft.world.GameRules;

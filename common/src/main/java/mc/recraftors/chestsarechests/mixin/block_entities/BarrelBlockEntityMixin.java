@@ -1,4 +1,4 @@
-package mc.recraftors.chestsarechests.mixin;
+package mc.recraftors.chestsarechests.mixin.block_entities;
 
 import mc.recraftors.chestsarechests.ChestsAreChests;
 import mc.recraftors.chestsarechests.util.BlockOpenableContainer;
@@ -10,6 +10,7 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
 import net.minecraft.block.entity.ViewerCountManager;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Properties;
@@ -17,31 +18,22 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BarrelBlockEntity.class)
-public abstract class BarrelBlockEntityMixin extends LootableContainerBlockEntity implements FallInContainer {
+public abstract class BarrelBlockEntityMixin extends LootableContainerBlockEntity implements FallInContainer, Inventory {
     @Shadow protected abstract DefaultedList<ItemStack> getInvStackList();
 
     @Shadow private ViewerCountManager stateManager;
 
     protected BarrelBlockEntityMixin(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
-    }
-
-    @Unique
-    private void chests$dropAllDown() {
-        if (this.world == null) {
-            return;
-        }
-        ChestsAreChests.dropAllDown(this, this);
-        this.stateManager.updateViewerCount(world, pos, world.getBlockState(pos));
     }
 
     @Inject(
@@ -63,10 +55,14 @@ public abstract class BarrelBlockEntityMixin extends LootableContainerBlockEntit
         }
         if (!this.chests$isOpen()) return;
         if (!state.getProperties().contains(Properties.FACING)) return;
-        if (state.get(Properties.FACING) == Direction.DOWN) {
+        Direction dir = state.get(Properties.FACING);
+        if (dir == Direction.DOWN && w.getGameRules().getBoolean(ChestsAreChests.getBarrelFallThrowableSpecial())) {
             Box box = new Box(pos.getX(), pos.getY()-.5d, pos.getZ(), pos.getX()+1d, pos.getY(), pos.getZ()+1d);
             if (w.isSpaceEmpty(box)) {
-                this.chests$dropAllDown();
+                Vec3d outPos = pos.toCenterPos().add(0.75 * dir.getOffsetX(), 0.75 * dir.getOffsetY(), 0.75 * dir.getOffsetZ());
+                Vec3d velocity = new Vec3d(0.05 * dir.getOffsetX(), 0.05 * dir.getOffsetY(), 0.05 * dir.getOffsetZ());
+                this.chests$fallOut(w, dir, this, outPos, velocity);
+                this.stateManager.updateViewerCount(world, pos, state);
             }
         }
     }

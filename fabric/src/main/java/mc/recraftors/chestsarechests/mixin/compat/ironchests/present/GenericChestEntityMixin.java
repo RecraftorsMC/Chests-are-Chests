@@ -28,8 +28,6 @@ import java.util.HashSet;
 public abstract class GenericChestEntityMixin extends ChestBlockEntity implements FallInContainer, BlockOpenableContainer {
     @Shadow(remap=false) int viewerCount;
 
-    @Shadow public abstract void markDirty();
-
     @Unique private int chests$blockOpenTick = 0;
     @Unique private boolean chests$blockForcedOpen = false;
     @Unique

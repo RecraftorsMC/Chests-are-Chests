@@ -4,16 +4,20 @@ import mc.recraftors.chestsarechests.ChestsAreChests;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
@@ -75,6 +79,27 @@ public interface FallInContainer {
 
     default @Nullable BooleanHolder chests$getBooleanHolder() {
         return null;
+    }
+
+    default Map<Integer, Integer> getFallUpdateMap() {
+        return new HashMap<>();
+    }
+
+    default void chests$fallOut(World world, Direction direction, Inventory inventory, Vec3d pos, Vec3d velocity) {
+        int m = inventory.size();
+        Map<Integer, Integer> map = getFallUpdateMap();
+        for (int i = 0; i < m; i++) {
+            ItemStack stack = inventory.getStack(i);
+            int h = ChestsAreChests.itemStackCustomHash(stack);
+            if (map.getOrDefault(i, 0).equals(h)) continue;
+            boolean b = stack.isIn(ChestsAreChests.SPECIAL_FALL) ?
+                    ((ContainerItemHelper)stack.getItem()).chests$onOpenTick(stack, this, direction, world, pos, velocity) :
+                    ContainerItemHelper.defaultOnOpenTick(stack, this, direction, world, pos, velocity);
+            if (b) {
+                inventory.removeStack(i);
+                map.remove(i);
+            } else map.put(i, h);
+        }
     }
 
     static boolean chests$inventoryInsertion(DefaultedList<ItemStack> inv, ItemEntity item, BiConsumer<Integer, ItemStack> setStack) {

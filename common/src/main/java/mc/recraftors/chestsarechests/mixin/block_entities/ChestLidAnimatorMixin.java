@@ -1,4 +1,4 @@
-package mc.recraftors.chestsarechests.mixin;
+package mc.recraftors.chestsarechests.mixin.block_entities;
 
 import mc.recraftors.chestsarechests.util.BooleanHolder;
 import net.minecraft.block.entity.ChestLidAnimator;
