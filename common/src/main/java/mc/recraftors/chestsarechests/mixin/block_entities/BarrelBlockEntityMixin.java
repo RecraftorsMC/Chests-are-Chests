@@ -43,7 +43,7 @@ public abstract class BarrelBlockEntityMixin extends LootableContainerBlockEntit
             )
     )
     private void tickPostViewerCountUpdateInjector(CallbackInfo ci) {
-        if (this.getWorld() == null || ! this.getWorld().getGameRules().getBoolean(ChestsAreChests.getBarrelFall())) return;
+        if (this.getWorld() == null) return;
         ServerWorld w = (ServerWorld) this.getWorld();
         BlockPos pos = this.getPos();
         BlockState state = w.getBlockState(pos);
@@ -54,15 +54,16 @@ public abstract class BarrelBlockEntityMixin extends LootableContainerBlockEntit
         if (!this.chests$isOpen()) return;
         if (!state.getProperties().contains(Properties.FACING)) return;
         Direction dir = state.get(Properties.FACING);
-        if (dir == Direction.DOWN && w.getGameRules().getBoolean(ChestsAreChests.getBarrelFallThrowableSpecial())) {
-            Vec3d center = Vec3d.ofCenter(new Vec3i(pos.getX(), pos.getY(), pos.getZ()));
-            Box box = Box.of(center, 1, .5, 1).offset(0, -.75, 0);
-            if (w.isSpaceEmpty(box)) {
-                Vec3d outPos = center.add(0.75 * dir.getOffsetX(), 0.75 * dir.getOffsetY(), 0.75 * dir.getOffsetZ());
-                Vec3d velocity = new Vec3d(0.05 * dir.getOffsetX(), 0.05 * dir.getOffsetY(), 0.05 * dir.getOffsetZ());
-                this.chests$fallOut(w, dir, this, outPos, velocity);
-                this.stateManager.updateViewerCount(world, pos, state);
-            }
+        if (!w.getGameRules().getBoolean(ChestsAreChests.getBarrelFall())) return;
+        if (!w.getGameRules().getBoolean(ChestsAreChests.getBarrelFallThrowableSpecial())) return;
+        Vec3d center = Vec3d.ofCenter(new Vec3i(pos.getX(), pos.getY(), pos.getZ()));
+        Box box = Box.of(center, 1, .5, 1)
+                .offset(.75 * dir.getOffsetX(), .75 * dir.getOffsetY(), .75 * dir.getOffsetZ());
+        if (w.isSpaceEmpty(box)) {
+            Vec3d outPos = center.add(0.75 * dir.getOffsetX(), 0.75 * dir.getOffsetY(), 0.75 * dir.getOffsetZ());
+            Vec3d velocity = new Vec3d(0.05 * dir.getOffsetX(), 0.05 * dir.getOffsetY(), 0.05 * dir.getOffsetZ());
+            this.chests$fallOut(w, dir, this, outPos, velocity);
+            this.stateManager.updateViewerCount(world, pos, state);
         }
     }
 
@@ -84,7 +85,8 @@ public abstract class BarrelBlockEntityMixin extends LootableContainerBlockEntit
 
     @Override
     public boolean chests$tryForceOpen(BlockState from) {
-        return ((BlockOpenableContainer)this.stateManager).chests$openContainerBlock((ServerWorld) this.world, this.getPos(), from, this);
+        return ((BlockOpenableContainer)this.stateManager)
+                .chests$openContainerBlock((ServerWorld) this.world, this.getPos(), from, this);
     }
 
     @Override
@@ -100,7 +102,8 @@ public abstract class BarrelBlockEntityMixin extends LootableContainerBlockEntit
         BlockOpenableContainer container = (BlockOpenableContainer) this.stateManager;
         if (container.chests$shouldStayOpen((ServerWorld) this.getWorld())) return false;
         container.chests$forceClose(this.getWorld(), this.getPos());
-        this.getWorld().setBlockState(this.getPos(), this.getWorld().getBlockState(this.getPos()).with(Properties.OPEN, false), Block.NOTIFY_LISTENERS);
+        this.getWorld().setBlockState(this.getPos(), this.getWorld().getBlockState(this.getPos())
+                .with(Properties.OPEN, false), Block.NOTIFY_LISTENERS);
         return true;
     }
 
