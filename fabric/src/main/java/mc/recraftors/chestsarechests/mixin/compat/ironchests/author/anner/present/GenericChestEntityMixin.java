@@ -12,7 +12,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -101,13 +103,25 @@ public abstract class GenericChestEntityMixin extends ChestBlockEntity implement
         return chests$blockForcedOpen;
     }
 
+    @SuppressWarnings("DuplicatedCode")
     @Override
     public void onScheduledTick() {
         super.onScheduledTick();
         ServerWorld w = (ServerWorld) this.getWorld();
-        if (this.chests$isOpen() && this.chests$isForcedOpened(w) && !this.chests$shouldStayOpen(w)) {
+        if (w == null) return;
+        if (!this.chests$isOpen()) return;
+        if (this.chests$isForcedOpened(w) && !this.chests$shouldStayOpen(w)) {
             this.chests$forceClose();
         }
+        if (!w.getGameRules().getBoolean(ChestsAreChests.getBarrelFall())) return;
+        if (!w.getGameRules().getBoolean(ChestsAreChests.getBarrelFallThrowableSpecial())) return;
+        BlockPos pos = this.getPos();
+        Box box = Box.of(pos.toCenterPos(), 1, .5, 1).offset(0, .75, 0);
+        if (!w.isSpaceEmpty(box)) return;
+        Direction dir = Direction.UP;
+        Vec3d outPos = pos.toCenterPos().add(0.75 * dir.getOffsetX(), 0.75 * dir.getOffsetY(), 0.75 * dir.getOffsetZ());
+        Vec3d velocity = new Vec3d(0.05 * dir.getOffsetX(), 0.05 * dir.getOffsetY(), 0.05 * dir.getOffsetZ());
+        this.chests$fallOut(w, dir, this, outPos, velocity);
     }
 
     @Inject(method = "onOpen", at = @At("HEAD"))
