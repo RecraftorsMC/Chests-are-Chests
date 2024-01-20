@@ -1,7 +1,7 @@
 package mc.recraftors.chestsarechests.mixin.compat.expanded_storage.present;
 
 import compasses.expandedstorage.common.block.entity.BarrelBlockEntity;
-import compasses.expandedstorage.common.block.entity.extendable.ExposedInventoryBlockEntity;
+import compasses.expandedstorage.common.inventory.ExposedInventory;
 import mc.recraftors.chestsarechests.util.BlockOpenableContainer;
 import mc.recraftors.chestsarechests.util.FallInContainer;
 import net.minecraft.block.Block;
@@ -12,35 +12,20 @@ import net.minecraft.block.entity.ViewerCountManager;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Properties;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(BarrelBlockEntity.class)
-public abstract class BarrelBlockEntityMixin extends ExposedInventoryBlockEntity implements FallInContainer {
+public abstract class BarrelBlockEntityMixin extends BlockEntity implements FallInContainer, ExposedInventory {
 
     @Shadow @Final private ViewerCountManager manager;
 
-    BarrelBlockEntityMixin(BlockEntityType<?> type, BlockPos pos, BlockState state, Identifier blockId, Text defaultName, int inventorySize) {
-        super(type, pos, state, blockId, defaultName, inventorySize);
-    }
-
-    /**
-     * Provides this, cast as a BlockEntity.
-     * <p>
-     * This is just ugly, but if this is what it takes to make it work...
-     * @return this, cast as a BlockEntity
-     */
-    @Unique
-    @SuppressWarnings("RedundantCast")
-    private BlockEntity c$e$g() {
-        return (BlockEntity) this;
+    BarrelBlockEntityMixin(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
     }
 
     @Override
@@ -50,23 +35,23 @@ public abstract class BarrelBlockEntityMixin extends ExposedInventoryBlockEntity
 
     @Override
     public VoxelShape chests$InputAreaShape() {
-        if (c$e$g().getWorld() == null) return EMPTY;
-        BlockState state = c$e$g().getWorld().getBlockState(c$e$g().getPos());
+        if (this.getWorld() == null) return EMPTY;
+        BlockState state = this.getWorld().getBlockState(this.getPos());
         if (!state.getProperties().contains(Properties.FACING)) return INSIDE;
         return DIRECTION_SHAPES.get(state.get(Properties.FACING));
     }
 
     @Override
     public boolean chests$isOpen() {
-        if (c$e$g().getWorld() == null) return false;
-        BlockState state = c$e$g().getWorld().getBlockState(c$e$g().getPos());
+        if (this.getWorld() == null) return false;
+        BlockState state = this.getWorld().getBlockState(this.getPos());
         if (!state.getProperties().contains(Properties.OPEN)) return false;
         return state.get(Properties.OPEN);
     }
 
     @Override
     public boolean chests$tryForceOpen(BlockState from) {
-        return chests$getContainer().chests$openContainerBlock((ServerWorld) c$e$g().getWorld(), c$e$g().getPos(), from, this);
+        return chests$getContainer().chests$openContainerBlock((ServerWorld) this.getWorld(), this.getPos(), from, this);
     }
 
     @Override
@@ -78,12 +63,11 @@ public abstract class BarrelBlockEntityMixin extends ExposedInventoryBlockEntity
 
     @Override
     public boolean chests$forceClose() {
-        BlockEntity e = c$e$g();
-        if (e.getWorld() == null) return false;
+        if (this.getWorld() == null) return false;
         BlockOpenableContainer container = chests$getContainer();
-        if (container.chests$shouldStayOpen((ServerWorld) e.getWorld())) return false;
-        container.chests$forceClose(e.getWorld(), e.getPos());
-        e.getWorld().setBlockState(e.getPos(), e.getWorld().getBlockState(e.getPos()).with(Properties.OPEN, false), Block.NOTIFY_LISTENERS);
+        if (container.chests$shouldStayOpen((ServerWorld) this.getWorld())) return false;
+        container.chests$forceClose(this.getWorld(), this.getPos());
+        this.getWorld().setBlockState(this.getPos(), this.getWorld().getBlockState(this.getPos()).with(Properties.OPEN, false), Block.NOTIFY_LISTENERS);
         return true;
     }
 
