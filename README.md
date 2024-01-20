@@ -57,12 +57,19 @@ Hence, if a mod of yours is [planned](#planned), [being worked on](#being-worked
 don't hesitate to [make your own](#make-your-own), and if need be, contact us either for help or to tell us
 that we have no need to keep our own compatibility.
 
-**Implemented**
+#### Implemented
 * [Anner's Iron Chests](https://modrinth.com/mod/cyberanner-ironchest)
 * [Mythic Metals Decorations](https://modrinth.com/mod/mythicmetals-decorations)
 * [Reinforced Chests](https://modrinth.com/mod/reinforced-chests)
 * [Expanded Storage](https://modrinth.com/expanded-storage)
 * [Spectrum](https://modrinth.com/mod/spectrum)
+
+#### Natural
+_Known mods that (should) have natural compatibility with this mod, with no extra implementation_
+* [Variant Chests](https://modrinth.com/mod/variant-chests)
+* [Variant Barrels](https://modrinth.com/mod/variant-barrels)
+* [Chest Colorizer](https://modrinth.com/mod/chest-colorizer)
+* [More Chests Variants](https://modrinth.com/mod/more-chest-variants-lieonlion)
 
 #### Being worked on
 * [Lootr](https://modrinth.com/mod/lootr)
@@ -70,7 +77,6 @@ that we have no need to keep our own compatibility.
 #### Planned
 * [myLoot](https://modrinth.com/mod/myloot)
 * [More Chests](https://modrinth.com/mod/more-chests)
-* [More Chests Variants](https://modrinth.com/mod/more-chest-variants-lieonlion)
 * [Compact Storage](https://modrinth.com/mod/compact_storage)
 
 #### Internally refused
