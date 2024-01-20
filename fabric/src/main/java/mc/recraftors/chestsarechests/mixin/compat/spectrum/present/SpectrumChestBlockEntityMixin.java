@@ -88,7 +88,7 @@ public abstract class SpectrumChestBlockEntityMixin extends LootableContainerBlo
     static class StateManagerMixin {
         @Shadow @Final SpectrumChestBlockEntity this$0;
 
-        @Inject(method = "onContainerOpen", at = @At("HEAD"))
+        @Inject(method = "onContainerOpen", at = @At("HEAD"), remap = true)
         private void onContainerOpenHeadInjector(World world, BlockPos pos, BlockState state, CallbackInfo ci) {
             if (!state.getProperties().contains(SpectrumChestBlock.FACING)) return;
             Direction direction = state.get(SpectrumChestBlock.FACING).getOpposite();
