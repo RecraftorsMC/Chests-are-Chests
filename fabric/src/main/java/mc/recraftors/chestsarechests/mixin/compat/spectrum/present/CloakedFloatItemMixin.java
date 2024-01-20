@@ -24,6 +24,6 @@ public abstract class CloakedFloatItemMixin extends FloatItem implements Contain
     @Override
     public boolean chests$onOpenTick(ItemStack stack, FallInContainer container, Direction direction, World world, Vec3d pos, Vec3d velocity) {
         float f = -(1 / this.getGravityMod());
-        return ContainerItemHelper.super.chests$onOpenTick(stack, container, direction, world, pos, velocity.multiply(1, f, 1));
+        return ContainerItemHelper.defaultOnOpenTick(stack, container, direction, world, pos, velocity.multiply(1, f, 1));
     }
 }
