@@ -9,7 +9,9 @@ import net.minecraft.block.HorizontalFacingBlock;
 import net.minecraft.block.entity.*;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import nourl.mythicmetalsdecorations.blocks.chest.MythicChestBlockEntity;
 import org.jetbrains.annotations.NotNull;
@@ -42,13 +44,25 @@ public abstract class MythicChestBlockEntityMixin extends LootableContainerBlock
         super(blockEntityType, blockPos, blockState);
     }
 
+    @SuppressWarnings("DuplicatedCode")
     @Inject(method = "onScheduledTick", at = @At("HEAD"))
     private void tickHeadInjector(CallbackInfo ci) {
         ServerWorld w = (ServerWorld) this.getWorld();
         BlockOpenableContainer container = this.chests$getContainer();
-        if (this.chests$isOpen() && container.chests$isForcedOpened(w) && !container.chests$shouldStayOpen(w)) {
+        if (w == null) return;
+        if (!this.chests$isOpen()) return;
+        if (container.chests$isForcedOpened(w) && !container.chests$shouldStayOpen(w)) {
             this.chests$forceClose();
         }
+        if (!w.getGameRules().getBoolean(ChestsAreChests.getBarrelFall())) return;
+        if (!w.getGameRules().getBoolean(ChestsAreChests.getBarrelFallThrowableSpecial())) return;
+        BlockPos pos = this.getPos();
+        Box box = Box.of(pos.toCenterPos(), 1, .5, 1).offset(0, .75, 0);
+        if (!w.isSpaceEmpty(box)) return;
+        Direction dir = Direction.UP;
+        Vec3d outPos = pos.toCenterPos().add(0.75 * dir.getOffsetX(), 0.75 * dir.getOffsetY(), 0.75 * dir.getOffsetZ());
+        Vec3d velocity = new Vec3d(0.05 * dir.getOffsetX(), 0.05 * dir.getOffsetY(), 0.05 * dir.getOffsetZ());
+        this.chests$fallOut(w, dir, this, outPos, velocity);
     }
 
     @Mixin(targets = "nourl/mythicmetalsdecorations/blocks/chest/MythicChestBlockEntity$1")
