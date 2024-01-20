@@ -7,6 +7,18 @@
     "minecraft:snowball",
     "minecraft:splash_potion",
     "minecraft:tipped_arrow",
-    "minecraft:trident"
+    "minecraft:trident",
+    {
+      "id": "spectrum:paltaeria_gem",
+      "required": false
+    },
+    {
+      "id": "spectrum:paltaeria_fragment_block",
+      "required": false
+    },
+    {
+      "id": "spectrum:paltaeria_ore",
+      "required": false
+    }
   ]
 }
