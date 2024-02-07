@@ -85,7 +85,8 @@ public abstract class ViewerCountManagerMixin implements BlockOpenableContainer 
 
     @Inject(method = "openContainer", at = @At("HEAD"))
     private void openContainerHeadInjector(PlayerEntity player, World world, BlockPos pos, BlockState state, CallbackInfo ci) {
-        this.chests$getViewers().add((ServerPlayerEntity) player);
+        if (world.isClient() || !(player instanceof ServerPlayerEntity serverPlayer)) return;
+        this.chests$getViewers().add(serverPlayer);
     }
 
     @Inject(method = "openContainer", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/entity/ViewerCountManager;onContainerOpen(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;)V", shift = At.Shift.AFTER))
