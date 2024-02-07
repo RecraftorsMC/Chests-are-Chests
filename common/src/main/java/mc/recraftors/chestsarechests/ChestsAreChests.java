@@ -1,12 +1,14 @@
 package mc.recraftors.chestsarechests;
 
-import mc.recraftors.chestsarechests.util.*;
+import mc.recraftors.chestsarechests.util.FallInContainer;
+import mc.recraftors.chestsarechests.util.LidFlingHelper;
+import mc.recraftors.chestsarechests.util.RegistryIndexAccessor;
+import mc.recraftors.unruled_api.FloatRule;
+import mc.recraftors.unruled_api.utils.IGameRulesProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
@@ -114,7 +116,7 @@ public class ChestsAreChests {
 		}
 	}
 
-	public static void setLidHorizontalPower(GameRules.Key<FloatRule> ruleKey) {
+	public static void setLidHorizontalPower(GameRules.Key<mc.recraftors.unruled_api.FloatRule> ruleKey) {
 		if (lidHorizontalPower == null) {
 			lidHorizontalPower = ruleKey;
 		}
@@ -135,19 +137,6 @@ public class ChestsAreChests {
 		return first.getCount() <= first.getMaxCount() && ItemStack.canCombine(first, second);
 	}
 
-	public static void dropAllDown(Inventory inventory, BlockEntity entity) {
-		int s = inventory.size();
-		for (int i = 0; i < s; i++) {
-			ItemStack stack = inventory.getStack(i);
-			if (stack.isEmpty()) continue;
-			ItemEntity item = new ItemEntity(entity.getWorld(), entity.getPos().getX()+.5, entity.getPos().getY()-.5, entity.getPos().getZ()+.5, stack.copy());
-			item.setVelocity(0, -.05, 0);
-			entity.getWorld().spawnEntity(item);
-			inventory.removeStack(i);
-			inventory.markDirty();
-		}
-	}
-
 	public static boolean automatedContainerOpening(ServerWorld world, BlockPos pos, BlockState state, Direction direction) {
 		BlockPos target = pos.offset(direction, 1);
 		BlockEntity entity = world.getBlockEntity(target);
@@ -162,8 +151,8 @@ public class ChestsAreChests {
 	public static void lidFlingEntity(Entity entity, Direction direction, float verticalMultiplier, float horizontalMultiplier) {
 		int x = direction.getOffsetX();
 		int z = direction.getOffsetZ();
-		float horiz = ((GamerulesFloatProvider)entity.getWorld().getGameRules()).chests$getFloat(getLidHorizontalPower());
-		float vert = ((GamerulesFloatProvider)entity.getWorld().getGameRules()).chests$getFloat(getLidVerticalPower());
+		float horiz = ((IGameRulesProvider)entity.getWorld().getGameRules()).unruled_getFloat(getLidHorizontalPower());
+		float vert = ((IGameRulesProvider)entity.getWorld().getGameRules()).unruled_getFloat(getLidVerticalPower());
 		entity.addVelocity(horiz*x*horizontalMultiplier, vert*verticalMultiplier, -horiz*z*horizontalMultiplier);
 	}
 
@@ -190,6 +179,7 @@ public class ChestsAreChests {
 				.forEach(e -> lidFlingEntity(e, direction, verticalMultiplier, horizontalMultiplier));
 	}
 
+	@SuppressWarnings("unchecked")
 	public static int itemStackCustomHash(ItemStack stack) {
 		Item item = stack.getItem();
 		int i = ((RegistryIndexAccessor<Item>) Registries.ITEM).chests$getEntryIndex(item);
@@ -197,6 +187,7 @@ public class ChestsAreChests {
 		return 197 * i + 19 * stack.getCount() + (stack.hasNbt() ? 7 : 1);
 	}
 
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public static <T> boolean isInArray(T value, T[] array) {
 		if (array == null) {
 			return false;

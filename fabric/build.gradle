@@ -36,6 +36,7 @@ dependencies {
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
+    modLocalRuntime "maven.modrinth:unruled-api:${project.unruled_version}"
 }
 
 processResources {

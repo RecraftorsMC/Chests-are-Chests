@@ -18,9 +18,6 @@
     "compat.expanded_storage.present.ChestBlockEntityMixin",
     "compat.expanded_storage.present.ChestBlockEntityMixin$ManagerMixin",
     "compat.expanded_storage.present.ChestBlockMixin",
-    "gamerules.EditGamerulesScreenAnonymousVisitorMixin",
-    "gamerules.GamerulesMixin",
-    "gamerules.GameRulesVisitorMixin",
     "items.ArrowItemMixin",
     "items.EggItemMixin",
     "items.ItemMixin",
@@ -30,7 +27,6 @@
     "items.TridentItemMixin"
   ],
   "client": [
-    "gamerules.ScreenClientAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

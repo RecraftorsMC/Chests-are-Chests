@@ -23,3 +23,9 @@ issueTrackerURL="https://github.com/RecraftorsMC/Chests-are-Chests/issues"
    versionRange="[1.20.1)"
    ordering="NONE"
    side="BOTH"
+[[dependencies.chests_are_chests]]
+   modId="unruled_api"
+   mandatory=true
+   versionRange="*"
+   ordering="NONE"
+   side="BOTH"
