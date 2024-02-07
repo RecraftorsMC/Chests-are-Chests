@@ -49,6 +49,10 @@ Now the game will feel more natural, even just a little bit, won't you agree?
     * default: 10
     * gamerule: `chests.dispenserOpen.duration`
 
+## Dependencies
+
+<a href="https://modrinth.com/mod/unruled-api"><img alt="Requires Unruled API" height="80" src="https://github.com/RecraftorsMC/.github/blob/main/pictures/unruled-badge.png"/></a>
+
 ## Mod compatibilities
 
 ### Internal compatibilities
