@@ -20,11 +20,11 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(BarrelBlockEntity.class)
-public abstract class BarrelBlockEntityMixin extends BlockEntity implements FallInContainer, ExposedInventory {
+public abstract class ExpandedBarrelBlockEntityMixin extends BlockEntity implements FallInContainer, ExposedInventory {
 
     @Shadow @Final private ViewerCountManager manager;
 
-    BarrelBlockEntityMixin(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+    ExpandedBarrelBlockEntityMixin(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
 

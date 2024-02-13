@@ -36,12 +36,12 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 @Mixin(ChestBlockEntity.class)
-public abstract class ChestBlockEntityMixin extends OldChestBlockEntity implements FallInContainer, BooleanHolder {
+public abstract class ExpandedChestBlockEntityMixin extends OldChestBlockEntity implements FallInContainer, BooleanHolder {
     @Shadow @Final private ChestLidAnimator lidController;
 
     @Shadow @Final private ViewerCountManager manager;
 
-    ChestBlockEntityMixin(BlockEntityType<?> type, BlockPos pos, BlockState state, Identifier blockId, Function<OpenableBlockEntity, ItemAccess> access, Supplier<Lockable> lockable) {
+    ExpandedChestBlockEntityMixin(BlockEntityType<?> type, BlockPos pos, BlockState state, Identifier blockId, Function<OpenableBlockEntity, ItemAccess> access, Supplier<Lockable> lockable) {
         super(type, pos, state, blockId, access, lockable);
     }
 

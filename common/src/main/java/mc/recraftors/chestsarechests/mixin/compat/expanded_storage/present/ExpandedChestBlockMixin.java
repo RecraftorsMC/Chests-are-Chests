@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ChestBlock.class)
-public abstract class ChestBlockMixin {
+public abstract class ExpandedChestBlockMixin {
     @SuppressWarnings("DuplicatedCode")
     @Inject(
             method = "scheduledTick",

@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BarrelBlock.class)
-public abstract class BarrelBlockMixin {
+public abstract class ExpandedBarrelBlockMixin {
     @SuppressWarnings("DuplicatedCode")
     @Inject(
             method = "scheduledTick",
@@ -40,7 +40,6 @@ public abstract class BarrelBlockMixin {
         if (!c.chests$isOpen()) return;
         if (!state.getProperties().contains(Properties.FACING)) return;
         if (!world.getGameRules().getBoolean(ChestsAreChests.getBarrelFall())) return;
-        if (!world.getGameRules().getBoolean(ChestsAreChests.getBarrelFallThrowableSpecial())) return;
         Direction dir = state.get(Properties.FACING);
         Box box = Box.of(pos.toCenterPos(), 1, .5, 1)
                 .offset(.75 * dir.getOffsetX(), .75 * dir.getOffsetY(), .75 * dir.getOffsetZ());
