@@ -30,9 +30,16 @@ allprojects {
     group = rootProject.maven_group
 
     repositories {
-        maven {
-            name = "Modrinth"
-            url = "https://api.modrinth.com/maven"
+        exclusiveContent {
+            forRepository {
+                maven {
+                    name = "Modrinth"
+                    url = "https://api.modrinth.com/maven"
+                }
+            }
+            filter {
+                includeGroup "maven.modrinth"
+            }
         }
     }
 
