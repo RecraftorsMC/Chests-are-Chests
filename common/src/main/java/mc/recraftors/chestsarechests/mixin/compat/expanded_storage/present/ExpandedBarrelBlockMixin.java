@@ -1,6 +1,6 @@
 package mc.recraftors.chestsarechests.mixin.compat.expanded_storage.present;
 
-import compasses.expandedstorage.common.block.BarrelBlock;
+import compasses.expandedstorage.impl.block.BarrelBlock;
 import mc.recraftors.chestsarechests.ChestsAreChests;
 import mc.recraftors.chestsarechests.util.BlockOpenableContainer;
 import mc.recraftors.chestsarechests.util.FallInContainer;
@@ -26,7 +26,7 @@ public abstract class ExpandedBarrelBlockMixin {
             method = "scheduledTick",
             at = @At(
                     value = "INVOKE",
-                    target = "Lcompasses/expandedstorage/common/block/entity/BarrelBlockEntity;updateViewerCount(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;)V",
+                    target = "Lcompasses/expandedstorage/impl/block/entity/BarrelBlockEntity;updateViewerCount(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;)V",
                     shift = At.Shift.BEFORE
             )
     )
@@ -41,7 +41,8 @@ public abstract class ExpandedBarrelBlockMixin {
         if (!state.getProperties().contains(Properties.FACING)) return;
         if (!world.getGameRules().getBoolean(ChestsAreChests.getBarrelFall())) return;
         Direction dir = state.get(Properties.FACING);
-        Box box = Box.of(pos.toCenterPos(), 1, .5, 1)
+        Box box = Box.of(pos.toCenterPos(), 1 - 0.5 * Math.abs(dir.getOffsetX()),
+                        1 - 0.5 * Math.abs(dir.getOffsetY()), 1 - 0.5 * Math.abs(dir.getOffsetZ()))
                 .offset(.75 * dir.getOffsetX(), .75 * dir.getOffsetY(), .75 * dir.getOffsetZ());
         if (world.isSpaceEmpty(box)) {
             Vec3d outPos = pos.toCenterPos().add(0.75 * dir.getOffsetX(), 0.75 * dir.getOffsetY(), 0.75 * dir.getOffsetZ());

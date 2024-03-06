@@ -1,10 +1,10 @@
 package mc.recraftors.chestsarechests.mixin.compat.expanded_storage.present;
 
-import compasses.expandedstorage.common.block.entity.ChestBlockEntity;
-import compasses.expandedstorage.common.block.entity.OldChestBlockEntity;
-import compasses.expandedstorage.common.block.entity.extendable.OpenableBlockEntity;
-import compasses.expandedstorage.common.block.strategies.ItemAccess;
-import compasses.expandedstorage.common.block.strategies.Lockable;
+import compasses.expandedstorage.impl.block.entity.ChestBlockEntity;
+import compasses.expandedstorage.impl.block.entity.OldChestBlockEntity;
+import compasses.expandedstorage.impl.block.entity.extendable.OpenableBlockEntity;
+import compasses.expandedstorage.impl.block.strategies.ItemAccess;
+import compasses.expandedstorage.impl.block.strategies.Lockable;
 import mc.recraftors.chestsarechests.ChestsAreChests;
 import mc.recraftors.chestsarechests.util.BlockOpenableContainer;
 import mc.recraftors.chestsarechests.util.BooleanHolder;
@@ -108,7 +108,7 @@ public abstract class ExpandedChestBlockEntityMixin extends OldChestBlockEntity 
         return FallInContainer.chests$inventoryInsertion(getItems(), entity, i::setStack);
     }
 
-    @Mixin(targets = "compasses/expandedstorage/common/block/entity/ChestBlockEntity$1")
+    @Mixin(targets = "compasses/expandedstorage/impl/block/entity/ChestBlockEntity$1")
     static class ManagerMixin {
         @Shadow(remap = false) @Final ChestBlockEntity this$0;
 

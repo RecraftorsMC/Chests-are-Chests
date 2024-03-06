@@ -1,6 +1,6 @@
 package mc.recraftors.chestsarechests.mixin.compat.expanded_storage.present;
 
-import compasses.expandedstorage.common.block.ChestBlock;
+import compasses.expandedstorage.impl.block.ChestBlock;
 import mc.recraftors.chestsarechests.ChestsAreChests;
 import mc.recraftors.chestsarechests.util.BlockOpenableContainer;
 import mc.recraftors.chestsarechests.util.BooleanHolder;
@@ -26,7 +26,7 @@ public abstract class ExpandedChestBlockMixin {
             method = "scheduledTick",
             at = @At(
                     value = "INVOKE",
-                    target = "Lcompasses/expandedstorage/common/block/entity/ChestBlockEntity;updateViewerCount(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;)V",
+                    target = "Lcompasses/expandedstorage/impl/block/entity/ChestBlockEntity;updateViewerCount(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;)V",
                     shift = At.Shift.BEFORE
             )
     )

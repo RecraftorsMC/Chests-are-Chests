@@ -1,7 +1,7 @@
 package mc.recraftors.chestsarechests.mixin.compat.expanded_storage.present;
 
-import compasses.expandedstorage.common.block.entity.BarrelBlockEntity;
-import compasses.expandedstorage.common.inventory.ExposedInventory;
+import compasses.expandedstorage.impl.block.entity.BarrelBlockEntity;
+import compasses.expandedstorage.impl.inventory.ExposedInventory;
 import mc.recraftors.chestsarechests.util.BlockOpenableContainer;
 import mc.recraftors.chestsarechests.util.FallInContainer;
 import net.minecraft.block.Block;
