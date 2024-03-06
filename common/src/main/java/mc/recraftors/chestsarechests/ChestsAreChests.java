@@ -4,6 +4,7 @@ import mc.recraftors.chestsarechests.util.FallInContainer;
 import mc.recraftors.chestsarechests.util.LidFlingHelper;
 import mc.recraftors.chestsarechests.util.RegistryIndexAccessor;
 import mc.recraftors.unruled_api.FloatRule;
+import mc.recraftors.unruled_api.UnruledApi;
 import mc.recraftors.unruled_api.utils.IGameRulesProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -129,6 +130,19 @@ public class ChestsAreChests {
 
 	public static void init() {
 		LOGGER.debug("{} loaded", MOD_ID);
+		initializeGamerules();
+		LOGGER.info("{} initialized", MOD_ID);
+	}
+
+	private static void initializeGamerules() {
+		setBarrelFall(GameRules.register(BARREL_FALL_RULE_ID, GameRules.Category.DROPS, UnruledApi.createBoolean(false)));
+		setBarrelFallThrowableSpecial(GameRules.register(BARREL_FALL_SPECIAL_THROWABLE_RULE_ID, GameRules.Category.DROPS, UnruledApi.createBoolean(true)));
+		setLidFling(GameRules.register(CHEST_LID_FLING_RULE_ID, GameRules.Category.MISC, UnruledApi.createBoolean(false)));
+		setLidHorizontalPower(GameRules.register(CHEST_LID_HORIZONTAL_POWER_RULE_ID, GameRules.Category.MISC, UnruledApi.createFloat(.25f)));
+		setLidVerticalPower(GameRules.register(CHESTS_LID_VERTICAL_POWER_RULE_ID, GameRules.Category.MISC, UnruledApi.createFloat(.6f)));
+		setInsertOpen(GameRules.register(INSERT_OPEN_RULE_ID, GameRules.Category.DROPS, UnruledApi.createBoolean(true)));
+		setDispenserOpen(GameRules.register(DISPENSER_OPEN_RULE_ID, GameRules.Category.MISC, UnruledApi.createBoolean(true)));
+		setDispenserOpenDuration(GameRules.register(DISPENSER_OPEN_DURATION_RULE_ID, GameRules.Category.MISC, UnruledApi.createInt(10)));
 	}
 
 	public static boolean canMergeItems(ItemStack first, ItemStack second) {
