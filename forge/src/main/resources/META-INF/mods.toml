@@ -20,7 +20,7 @@ issueTrackerURL="https://github.com/RecraftorsMC/Chests-are-Chests/issues"
 [[dependencies.chests_are_chests]]
    modId="minecraft"
    mandatory=true
-   versionRange="[1.20.1)"
+   versionRange="[1.20.1,)"
    ordering="NONE"
    side="BOTH"
 [[dependencies.chests_are_chests]]
