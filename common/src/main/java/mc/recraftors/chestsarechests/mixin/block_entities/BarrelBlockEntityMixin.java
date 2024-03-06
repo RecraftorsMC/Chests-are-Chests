@@ -58,7 +58,8 @@ public abstract class BarrelBlockEntityMixin extends LootableContainerBlockEntit
         if (!w.getGameRules().getBoolean(ChestsAreChests.getBarrelFall())) return;
         if (!w.getGameRules().getBoolean(ChestsAreChests.getBarrelFallThrowableSpecial())) return;
         Vec3d center = Vec3d.ofCenter(new Vec3i(pos.getX(), pos.getY(), pos.getZ()));
-        Box box = Box.of(center, 1, .5, 1)
+        Box box = Box.of(center, 1 - 0.5 * Math.abs(dir.getOffsetX()),
+                        1 - 0.5 * Math.abs(dir.getOffsetY()), 1 - 0.5 * Math.abs(dir.getOffsetX()))
                 .offset(.75 * dir.getOffsetX(), .75 * dir.getOffsetY(), .75 * dir.getOffsetZ());
         if (w.isSpaceEmpty(box)) {
             Vec3d outPos = center.add(0.75 * dir.getOffsetX(), 0.75 * dir.getOffsetY(), 0.75 * dir.getOffsetZ());
