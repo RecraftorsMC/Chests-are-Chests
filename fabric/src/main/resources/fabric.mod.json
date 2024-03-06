@@ -27,7 +27,11 @@
   "license": "GNU GPL 3.0",
   "icon": "icon.png",
   "environment": "*",
-  "entrypoints": {},
+  "entrypoints": {
+    "main": [
+      "mc.recraftors.chestsarechests.fabric.ChestsAreChestsImpl"
+    ]
+  },
   "mixins": [
     "chests_are_chests.mixins.json",
     "chests_are_chests-fabric.mixins.json"
