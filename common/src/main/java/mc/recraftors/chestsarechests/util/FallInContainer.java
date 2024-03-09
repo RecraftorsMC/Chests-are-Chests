@@ -180,7 +180,8 @@ public interface FallInContainer {
     }
 
     /**
-     * Makes items fall out... Or fly out, depending on the items.
+     * Makes items fall out... Or fly out, depending on the items
+     * and current gamerules values.
      * <p>
      * Should be called in block entity tick.
      * @param world The container's world.
@@ -192,6 +193,7 @@ public interface FallInContainer {
     @ApiStatus.NonExtendable
     default void chests$fallOut(World world, Direction direction, Inventory inventory, Vec3d pos, Vec3d velocity) {
         int m = inventory.size();
+        boolean doSpecial = world.getGameRules().getBoolean(ChestsAreChests.getBarrelFallThrowableSpecial());
         Map<Integer, Integer> map = chests$getFallUpdateMap();
         if (map == null) {
             return;
@@ -200,7 +202,7 @@ public interface FallInContainer {
             ItemStack stack = inventory.getStack(i);
             int h = ChestsAreChests.itemStackCustomHash(stack);
             if (map.getOrDefault(i, 0).equals(h)) continue;
-            boolean b = stack.isIn(ChestsAreChests.SPECIAL_FALL) ?
+            boolean b = (doSpecial && stack.isIn(ChestsAreChests.SPECIAL_FALL)) ?
                     ((ContainerItemHelper)stack.getItem()).chests$onOpenTick(stack, this, direction, world, pos, velocity) :
                     ContainerItemHelper.defaultOnOpenTick(stack, this, direction, world, pos, velocity);
             if (b) {

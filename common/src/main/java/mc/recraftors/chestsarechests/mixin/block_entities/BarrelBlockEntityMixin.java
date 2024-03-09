@@ -53,6 +53,7 @@ public abstract class BarrelBlockEntityMixin extends LootableContainerBlockEntit
         }
         if (!this.chests$isOpen()) return;
         if (!state.getProperties().contains(Properties.FACING)) return;
+        if (!w.getGameRules().getBoolean(ChestsAreChests.getBarrelFall())) return;
         Direction dir = state.get(Properties.FACING);
         if (!w.getGameRules().getBoolean(ChestsAreChests.getBarrelFall())) return;
         if (!w.getGameRules().getBoolean(ChestsAreChests.getBarrelFallThrowableSpecial())) return;
