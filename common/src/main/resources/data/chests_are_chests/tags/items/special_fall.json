@@ -19,6 +19,10 @@
     {
       "id": "spectrum:paltaeria_ore",
       "required": false
+    },
+    {
+      "id": "easy_villagers:villager",
+      "required": false
     }
   ]
 }
