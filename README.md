@@ -32,6 +32,11 @@ Now the game will feel more natural, even just a little bit, won't you agree?
     * default: enabled
     * gamerule: `chests.barrelFall.throwableSpecial`
     * item tag: `#chests_are_chests:special_fall`
+    * Additional feature: spawn eggs
+      * Disabled by default (add `minecraft:spawn_egg` to the `special_fall` tag to enable)
+      * optional entity type tag: `#chests_are_chests:does_not_fall_hatch`
+        * specifies what entities shouldn't hatch from spawn eggs on fall
+        * includes vanilla bosses by default
 * Making chest lids throw items
   * default: disabled
   * gamerule: `chests.lidFling`
@@ -67,6 +72,8 @@ that we have no need to keep our own compatibility.
 * [Reinforced Chests](https://modrinth.com/mod/reinforced-chests)
 * [Expanded Storage](https://modrinth.com/expanded-storage)
 * [Spectrum](https://modrinth.com/mod/spectrum)
+* [Easy Villagers](https://modrinth.com/mod/easy-villagers)
+* [Pickable Villagers](https://modrinth.com/mod/pickable-villagers)
 
 #### Being worked on
 * [Lootr](https://modrinth.com/mod/lootr)
