@@ -22,6 +22,7 @@
     "items.EggItemMixin",
     "items.ItemMixin",
     "items.SnowballItemMixin",
+    "items.SpawnEggItemMixin",
     "items.SpectralArrowItemMixin",
     "items.ThrowablePotionMixin",
     "items.TridentItemMixin"
