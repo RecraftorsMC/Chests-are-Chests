@@ -33,6 +33,7 @@ dependencies {
     modCompileOnly "maven.modrinth:cyberanner-ironchest:${project.ironchests_version}"
     modCompileOnly "maven.modrinth:mythicmetals-decorations:${project.mythicmetals_decorations_version}"
     modCompileOnly "maven.modrinth:spectrum:${project.spectrum_version}"
+    modCompileOnly "maven.modrinth:pickable-villagers:${project.pickable_villagers_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
