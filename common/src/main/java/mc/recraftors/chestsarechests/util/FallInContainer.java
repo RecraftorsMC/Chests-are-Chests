@@ -203,7 +203,7 @@ public interface FallInContainer {
             int h = ChestsAreChests.itemStackCustomHash(stack);
             if (map.getOrDefault(i, 0).equals(h)) continue;
             boolean b = (doSpecial && stack.isIn(ChestsAreChests.SPECIAL_FALL)) ?
-                    ((ContainerItemHelper)stack.getItem()).chests$onOpenTick(stack, this, direction, world, pos, velocity) :
+                    ((ContainerItemHelper)stack.getItem()).chests$onOpenTick(stack, this, direction, (ServerWorld) world, pos, velocity) :
                     ContainerItemHelper.defaultOnOpenTick(stack, this, direction, world, pos, velocity);
             if (b) {
                 inventory.removeStack(i);
