@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "mc.recraftors.chestsarechests.mixin",
+  "plugin": "mc.recraftors.chestsarechests.mixin.compat.Plugin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "compat.easy_villagers.VillagerItemMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
