@@ -46,6 +46,7 @@ public class ChestsAreChests {
 	private static GameRules.Key<FloatRule> lidHorizontalPower;
 	private static GameRules.Key<FloatRule> lidVerticalPower;
 	public static final TagKey<EntityType<?>> FLINGABLE = TagKey.of(Registry.ENTITY_TYPE_KEY, new Identifier(MOD_ID, "flingable"));
+	public static final TagKey<EntityType<?>> DOES_NOT_FALL_HATCH = TagKey.of(Registry.ENTITY_TYPE_KEY, new Identifier(MOD_ID, "does_not_fall_hatch"));
 	public static final TagKey<Item> SPECIAL_FALL = TagKey.of(Registry.ITEM_KEY, new Identifier(MOD_ID, "special_fall"));
 
 	public static GameRules.Key<GameRules.BooleanRule> getBarrelFall() {
