@@ -9,6 +9,7 @@
     "compat.mythicmetals_decorations.present.MythicChestBlockEntityMixin",
     "compat.mythicmetals_decorations.present.MythicChestBlockEntityMixin$StateManagerMixin",
     "compat.mythicmetals_decorations.present.MythicChestBlockMixin",
+    "compat.pickablevillagers.present.VillagerItemMixin",
     "compat.spectrum.present.CloakedFloatItemMixin",
     "compat.spectrum.present.CompactingChestBlockEntityMixin",
     "compat.spectrum.present.HeartBoundChestBlockEntityMixin",
