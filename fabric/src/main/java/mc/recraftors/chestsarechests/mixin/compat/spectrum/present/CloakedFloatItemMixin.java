@@ -5,9 +5,9 @@ import de.dafuqs.spectrum.blocks.gravity.FloatItem;
 import mc.recraftors.chestsarechests.util.ContainerItemHelper;
 import mc.recraftors.chestsarechests.util.FallInContainer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(value = CloakedFloatItem.class, remap = false)
@@ -22,7 +22,7 @@ public abstract class CloakedFloatItemMixin extends FloatItem implements Contain
     }
 
     @Override
-    public boolean chests$onOpenTick(ItemStack stack, FallInContainer container, Direction direction, World world, Vec3d pos, Vec3d velocity) {
+    public boolean chests$onOpenTick(ItemStack stack, FallInContainer container, Direction direction, ServerWorld world, Vec3d pos, Vec3d velocity) {
         float f = (float) -(1 / this.getGravityModForItemEntity());
         return ContainerItemHelper.defaultOnOpenTick(stack, container, direction, world, pos, velocity.multiply(1, f, 1));
     }

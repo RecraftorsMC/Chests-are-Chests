@@ -3,6 +3,7 @@ package mc.recraftors.chestsarechests.util;
 import mc.recraftors.chestsarechests.ChestsAreChests;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -11,7 +12,7 @@ import net.minecraft.world.World;
  * Utility class for items with special fall-from-container behaviour.
  */
 public interface ContainerItemHelper {
-    default boolean chests$onOpenTick(ItemStack stack, FallInContainer container, Direction direction, World world, Vec3d pos, Vec3d velocity) {
+    default boolean chests$onOpenTick(ItemStack stack, FallInContainer container, Direction direction, ServerWorld world, Vec3d pos, Vec3d velocity) {
         return false;
     }
 
