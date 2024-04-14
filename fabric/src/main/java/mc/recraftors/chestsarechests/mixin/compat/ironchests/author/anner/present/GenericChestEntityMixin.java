@@ -54,6 +54,7 @@ public abstract class GenericChestEntityMixin extends ChestBlockEntity implement
         this.chests$blockForcedOpen = true;
         container.chests$forceOpen(world, pos, from);
         ChestsAreChests.scheduleTick(world, pos, duration);
+        ChestsAreChests.scheduleTick(world, pos, 0);
         return true;
     }
 
@@ -100,10 +101,15 @@ public abstract class GenericChestEntityMixin extends ChestBlockEntity implement
         return chests$blockForcedOpen;
     }
 
-    @SuppressWarnings("DuplicatedCode")
     @Override
     public void onScheduledTick() {
         super.onScheduledTick();
+        chests$onTick();
+    }
+
+    @Override
+    @SuppressWarnings("DuplicatedCode")
+    public void chests$onTick() {
         ServerWorld w = (ServerWorld) this.getWorld();
         if (w == null) return;
         if (!this.chests$isOpen()) return;

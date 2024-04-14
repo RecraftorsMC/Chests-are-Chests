@@ -44,6 +44,7 @@ public abstract class ViewerCountManagerMixin implements BlockOpenableContainer 
         this.onContainerOpen(world, pos, it);
         this.onViewerCountUpdate(world, pos, it, 0, 1);
         ChestsAreChests.scheduleTick(world, pos, duration);
+        container.chests$onTick();
         return true;
     }
 

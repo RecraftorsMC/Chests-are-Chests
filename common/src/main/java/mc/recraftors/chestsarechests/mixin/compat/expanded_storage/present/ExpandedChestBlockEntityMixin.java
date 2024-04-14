@@ -11,7 +11,6 @@ import mc.recraftors.chestsarechests.util.BooleanHolder;
 import mc.recraftors.chestsarechests.util.FallInContainer;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalFacingBlock;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.ChestLidAnimator;
 import net.minecraft.block.entity.ViewerCountManager;
@@ -19,15 +18,13 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.*;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -43,18 +40,6 @@ public abstract class ExpandedChestBlockEntityMixin extends OldChestBlockEntity 
 
     ExpandedChestBlockEntityMixin(BlockEntityType<?> type, BlockPos pos, BlockState state, Identifier blockId, Function<OpenableBlockEntity, ItemAccess> access, Supplier<Lockable> lockable) {
         super(type, pos, state, blockId, access, lockable);
-    }
-
-    /**
-     * Provides this, cast as a BlockEntity.
-     * <p>
-     * This is just ugly, but if this is what it takes to make it work...
-     * @return this, cast as a BlockEntity
-     */
-    @Unique
-    @SuppressWarnings("RedundantCast")
-    private BlockEntity c$e$g() {
-        return (BlockEntity) this;
     }
 
     @Override
@@ -84,7 +69,7 @@ public abstract class ExpandedChestBlockEntityMixin extends OldChestBlockEntity 
 
     @Override
     public boolean chests$tryForceOpen(BlockState from) {
-        return this.chests$getContainer().chests$openContainerBlock((ServerWorld) c$e$g().getWorld(), c$e$g().getPos(), from, this);
+        return this.chests$getContainer().chests$openContainerBlock((ServerWorld) this.getWorld(), this.getPos(), from, this);
     }
 
     @Override
@@ -95,17 +80,40 @@ public abstract class ExpandedChestBlockEntityMixin extends OldChestBlockEntity 
     @Override
     public boolean chests$forceClose() {
         BlockOpenableContainer container = this.chests$getContainer();
-        if (container.chests$shouldStayOpen((ServerWorld) c$e$g().getWorld())) return false;
-        container.chests$forceClose(c$e$g().getWorld(), c$e$g().getPos());
+        if (container.chests$shouldStayOpen((ServerWorld) this.getWorld())) return false;
+        container.chests$forceClose(this.getWorld(), this.getPos());
         this.chests$getBooleanHolder().chests$setBool(false);
         return true;
     }
 
     @Override
-    @SuppressWarnings("RedundantCast")
     public boolean chests$tryInsertion(ItemEntity entity) {
-        Inventory i = (Inventory) this;
-        return FallInContainer.chests$inventoryInsertion(getItems(), entity, i::setStack);
+        return FallInContainer.chests$inventoryInsertion(getItems(), entity, this::setStack);
+    }
+
+    @Override
+    @SuppressWarnings("DuplicatedCode")
+    public void chests$onTick() {
+        World s = this.getWorld();
+        if (!(s instanceof ServerWorld serverWorld)) {
+            return;
+        }
+        BlockOpenableContainer c = this.chests$getContainer();
+        if (this.chests$isOpen() && c.chests$isForcedOpened(serverWorld) && !c.chests$shouldStayOpen(serverWorld)) {
+            this.chests$forceClose();
+        }
+        if (!this.chests$isOpen()) return;
+        if (!serverWorld.getGameRules().getBoolean(ChestsAreChests.getBarrelFall())) return;
+        if (!serverWorld.getGameRules().getBoolean(ChestsAreChests.getBarrelFallThrowableSpecial())) return;
+        Direction dir = this.chests$getBool() ? Direction.DOWN : Direction.UP;
+        Vec3d center = Vec3d.ofCenter(new Vec3i(pos.getX(), pos.getY(), pos.getZ()));
+        Box box = Box.of(center, 1, .5, 1)
+                .offset(.75 * dir.getOffsetX(), .75 * dir.getOffsetY(), .75 * dir.getOffsetZ());
+        if (serverWorld.isSpaceEmpty(box)) {
+            Vec3d outPos = center.add(0.75 * dir.getOffsetX(), 0.75 * dir.getOffsetY(), 0.75 * dir.getOffsetZ());
+            Vec3d velocity = new Vec3d(0.05 * dir.getOffsetX(), 0.05 * dir.getOffsetY(), 0.05 * dir.getOffsetZ());
+            this.chests$fallOut(serverWorld, dir, this, outPos, velocity);
+        }
     }
 
     @Mixin(targets = "compasses/expandedstorage/common/block/entity/ChestBlockEntity$1")

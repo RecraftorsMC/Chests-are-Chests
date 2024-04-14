@@ -82,10 +82,12 @@ public abstract class ChestBlockEntityMixin extends LootableContainerBlockEntity
         return (BooleanHolder) this.lidAnimator;
     }
 
+    @Override
     @SuppressWarnings("DuplicatedCode")
-    @Inject(method = "onScheduledTick", at = @At("HEAD"))
-    private void tickHeadInjector(CallbackInfo ci) {
-        ServerWorld w = (ServerWorld) this.getWorld();
+    public void chests$onTick() {
+        if (!(this.getWorld() instanceof ServerWorld w)) {
+            return;
+        }
         BlockOpenableContainer container = this.chests$getContainer();
         if (this.chests$isOpen() && container.chests$isForcedOpened(w) && !container.chests$shouldStayOpen(w)) {
             this.chests$forceClose();
@@ -102,6 +104,11 @@ public abstract class ChestBlockEntityMixin extends LootableContainerBlockEntity
         Vec3d velocity = new Vec3d(0.05 * dir.getOffsetX(), 0.05 * dir.getOffsetY(), 0.05 * dir.getOffsetZ());
         this.chests$fallOut(w, dir, this, outPos, velocity);
         this.stateManager.updateViewerCount(w, pos, w.getBlockState(pos));
+    }
+
+    @Inject(method = "onScheduledTick", at = @At("HEAD"))
+    private void tickHeadInjector(CallbackInfo ci) {
+        this.chests$onTick();
     }
 
     @Mixin(targets = "net/minecraft/block/entity/ChestBlockEntity$1")

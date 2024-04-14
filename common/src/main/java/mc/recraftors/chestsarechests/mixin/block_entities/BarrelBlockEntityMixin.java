@@ -43,6 +43,11 @@ public abstract class BarrelBlockEntityMixin extends LootableContainerBlockEntit
             )
     )
     private void tickPostViewerCountUpdateInjector(CallbackInfo ci) {
+        this.chests$onTick();
+    }
+
+    @Override
+    public void chests$onTick() {
         if (this.getWorld() == null) return;
         ServerWorld w = (ServerWorld) this.getWorld();
         BlockPos pos = this.getPos();
