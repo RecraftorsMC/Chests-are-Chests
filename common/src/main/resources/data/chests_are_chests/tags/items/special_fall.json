@@ -23,6 +23,10 @@
     {
       "id": "easy_villagers:villager",
       "required": false
+    },
+    {
+      "id": "pickablevillagers:villager",
+      "required": false
     }
   ]
 }
