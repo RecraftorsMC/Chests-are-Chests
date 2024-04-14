@@ -3,7 +3,7 @@ package mc.recraftors.chestsarechests;
 import mc.recraftors.chestsarechests.util.FallInContainer;
 import mc.recraftors.chestsarechests.util.LidFlingHelper;
 import mc.recraftors.chestsarechests.util.RegistryIndexAccessor;
-import mc.recraftors.unruled_api.FloatRule;
+import mc.recraftors.unruled_api.rules.FloatRule;
 import mc.recraftors.unruled_api.UnruledApi;
 import mc.recraftors.unruled_api.utils.IGameRulesProvider;
 import net.minecraft.block.BlockState;
@@ -81,54 +81,6 @@ public class ChestsAreChests {
 		return insertOpen;
 	}
 
-	public static void setBarrelFall(GameRules.Key<GameRules.BooleanRule> ruleKey) {
-		if (barrelFall == null) {
-			barrelFall = ruleKey;
-		}
-	}
-
-	public static void setBarrelFallThrowableSpecial(GameRules.Key<GameRules.BooleanRule> ruleKey) {
-		if (barrelFallThrowableSpecial == null) {
-			barrelFallThrowableSpecial = ruleKey;
-		}
-	}
-
-	public static void setDispenserOpen(GameRules.Key<GameRules.BooleanRule> ruleKey) {
-		if (dispenserOpen == null) {
-			dispenserOpen = ruleKey;
-		}
-	}
-
-	public static void setDispenserOpenDuration(GameRules.Key<GameRules.IntRule> ruleKey) {
-		if (dispenserOpenDuration == null) {
-			dispenserOpenDuration = ruleKey;
-		}
-	}
-
-	public static void setInsertOpen(GameRules.Key<GameRules.BooleanRule> ruleKey) {
-		if (insertOpen == null) {
-			insertOpen = ruleKey;
-		}
-	}
-
-	public static void setLidFling(GameRules.Key<GameRules.BooleanRule> ruleKey) {
-		if (lidFling == null) {
-			lidFling = ruleKey;
-		}
-	}
-
-	public static void setLidHorizontalPower(GameRules.Key<mc.recraftors.unruled_api.FloatRule> ruleKey) {
-		if (lidHorizontalPower == null) {
-			lidHorizontalPower = ruleKey;
-		}
-	}
-
-	public static void setLidVerticalPower(GameRules.Key<FloatRule> ruleKey) {
-		if (lidVerticalPower == null) {
-			lidVerticalPower = ruleKey;
-		}
-	}
-
 	public static void init() {
 		LOGGER.debug("{} loaded", MOD_ID);
 		initializeGamerules();
@@ -136,14 +88,31 @@ public class ChestsAreChests {
 	}
 
 	private static void initializeGamerules() {
-		setBarrelFall(GameRules.register(BARREL_FALL_RULE_ID, GameRules.Category.DROPS, UnruledApi.createBoolean(false)));
-		setBarrelFallThrowableSpecial(GameRules.register(BARREL_FALL_SPECIAL_THROWABLE_RULE_ID, GameRules.Category.DROPS, UnruledApi.createBoolean(true)));
-		setLidFling(GameRules.register(CHEST_LID_FLING_RULE_ID, GameRules.Category.MISC, UnruledApi.createBoolean(false)));
-		setLidHorizontalPower(GameRules.register(CHEST_LID_HORIZONTAL_POWER_RULE_ID, GameRules.Category.MISC, UnruledApi.createFloat(.25f)));
-		setLidVerticalPower(GameRules.register(CHESTS_LID_VERTICAL_POWER_RULE_ID, GameRules.Category.MISC, UnruledApi.createFloat(.6f)));
-		setInsertOpen(GameRules.register(INSERT_OPEN_RULE_ID, GameRules.Category.DROPS, UnruledApi.createBoolean(true)));
-		setDispenserOpen(GameRules.register(DISPENSER_OPEN_RULE_ID, GameRules.Category.MISC, UnruledApi.createBoolean(true)));
-		setDispenserOpenDuration(GameRules.register(DISPENSER_OPEN_DURATION_RULE_ID, GameRules.Category.MISC, UnruledApi.createInt(10)));
+		if (barrelFall == null) {
+			barrelFall = UnruledApi.registerBoolean(BARREL_FALL_RULE_ID, GameRules.Category.DROPS, false);
+		}
+		if (barrelFallThrowableSpecial == null) {
+			barrelFallThrowableSpecial = UnruledApi.registerBoolean(BARREL_FALL_SPECIAL_THROWABLE_RULE_ID, GameRules.Category.DROPS, true);
+		}
+		if (lidFling == null) {
+			lidFling = UnruledApi.registerBoolean(CHEST_LID_FLING_RULE_ID, GameRules.Category.MISC, false);
+		}
+		if (lidHorizontalPower == null) {
+			lidHorizontalPower = UnruledApi.registerFloat(CHEST_LID_HORIZONTAL_POWER_RULE_ID, GameRules.Category.MISC, .25f);
+		}
+		if (lidVerticalPower == null) {
+			lidVerticalPower = UnruledApi.registerFloat(CHESTS_LID_VERTICAL_POWER_RULE_ID, GameRules.Category.MISC, .6f);
+		}
+		if (insertOpen == null) {
+			insertOpen = UnruledApi.registerBoolean(INSERT_OPEN_RULE_ID, GameRules.Category.DROPS, true);
+		}
+		if (dispenserOpen == null) {
+			dispenserOpen = UnruledApi.registerBoolean(DISPENSER_OPEN_RULE_ID, GameRules.Category.MISC, true);
+		}
+		if (dispenserOpenDuration == null) {
+			dispenserOpenDuration = UnruledApi.registerInt(DISPENSER_OPEN_DURATION_RULE_ID, GameRules.Category.MISC,
+					10, (server, rule) -> {if (rule.get() < 1) rule.set(1, server);});
+		}
 	}
 
 	public static boolean canMergeItems(ItemStack first, ItemStack second) {

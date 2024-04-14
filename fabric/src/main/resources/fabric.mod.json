@@ -36,10 +36,9 @@
     "chests_are_chests.mixins.json",
     "chests_are_chests-fabric.mixins.json"
   ],
-  "accessWidener": "chests_are_chests.accesswidener",
   "depends": {
     "fabricloader": ">=0.14.7",
     "minecraft": ">=1.19 <1.19.3-",
-    "unruled_api": "*"
+    "unruled_api": ">=0.4"
   }
 }

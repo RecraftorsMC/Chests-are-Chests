@@ -15,7 +15,6 @@ architectury {
 }
 
 loom {
-    accessWidenerPath = project(":common").loom.accessWidenerPath
 }
 
 configurations {
@@ -37,7 +36,7 @@ dependencies {
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
-    modLocalRuntime "maven.modrinth:unruled-api:${project.unruled_version}"
+    modLocalRuntime "maven.modrinth:unruled-api:${project.unruled_fabric_version}"
 }
 
 processResources {
