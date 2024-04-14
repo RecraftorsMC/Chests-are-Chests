@@ -30,6 +30,7 @@ public class ChestsAreChests {
 	public static final String MOD_ID = "chests_are_chests";
 	public static final String BARREL_FALL_RULE_ID = "chests.barrelFall";
 	public static final String BARREL_FALL_SPECIAL_THROWABLE_RULE_ID = "chests.barrelFall.throwableSpecial";
+	public static final String BARREL_FALL_SPREAD_RADIUS_RULE_ID = "chests.barrelFall.spreadRadius";
 	public static final String DISPENSER_OPEN_RULE_ID = "chests.dispenserOpen";
 	public static final String DISPENSER_OPEN_DURATION_RULE_ID = "chests.dispenserOpen.duration";
 	public static final String INSERT_OPEN_RULE_ID = "chests.insertOpen";
@@ -39,6 +40,7 @@ public class ChestsAreChests {
 	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 	private static GameRules.Key<GameRules.BooleanRule> barrelFall;
 	private static GameRules.Key<GameRules.BooleanRule> barrelFallThrowableSpecial;
+	private static GameRules.Key<FloatRule> barrelFallRandomSpreadRadius;
 	private static GameRules.Key<GameRules.BooleanRule> dispenserOpen;
 	private static GameRules.Key<GameRules.IntRule> dispenserOpenDuration;
 	private static GameRules.Key<GameRules.BooleanRule> insertOpen;
@@ -55,6 +57,10 @@ public class ChestsAreChests {
 
 	public static GameRules.Key<GameRules.BooleanRule> getBarrelFallThrowableSpecial() {
 		return barrelFallThrowableSpecial;
+	}
+
+	public static GameRules.Key<FloatRule> getBarrelFallRandomSpreadRadius() {
+		return barrelFallRandomSpreadRadius;
 	}
 
 	public static GameRules.Key<GameRules.BooleanRule> getDispenserOpen() {
@@ -93,6 +99,14 @@ public class ChestsAreChests {
 		}
 		if (barrelFallThrowableSpecial == null) {
 			barrelFallThrowableSpecial = UnruledApi.registerBoolean(BARREL_FALL_SPECIAL_THROWABLE_RULE_ID, GameRules.Category.DROPS, true);
+		}
+		if (barrelFallRandomSpreadRadius == null) {
+			barrelFallRandomSpreadRadius = UnruledApi.registerFloat(BARREL_FALL_SPREAD_RADIUS_RULE_ID,
+					GameRules.Category.DROPS, 0f, ((minecraftServer, floatRule) -> {
+						// min = 0, max = 0.5
+						if (floatRule.get() < 0) floatRule.set(0, minecraftServer);
+						else if (floatRule.get() > .5f) floatRule.set(.5f, minecraftServer);
+					}));
 		}
 		if (lidFling == null) {
 			lidFling = UnruledApi.registerBoolean(CHEST_LID_FLING_RULE_ID, GameRules.Category.MISC, false);
