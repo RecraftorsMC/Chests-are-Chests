@@ -2,6 +2,7 @@ package mc.recraftors.chestsarechests.mixin.compat.expanded_storage.present;
 
 import compasses.expandedstorage.impl.block.entity.BarrelBlockEntity;
 import compasses.expandedstorage.impl.inventory.ExposedInventory;
+import mc.recraftors.chestsarechests.ChestsAreChests;
 import mc.recraftors.chestsarechests.util.BlockOpenableContainer;
 import mc.recraftors.chestsarechests.util.FallInContainer;
 import net.minecraft.block.Block;
@@ -13,7 +14,11 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -74,5 +79,31 @@ public abstract class ExpandedBarrelBlockEntityMixin extends BlockEntity impleme
     @Override
     public boolean chests$tryInsertion(ItemEntity entity) {
         return FallInContainer.chests$inventoryInsertion(getItems(), entity, this::setStack);
+    }
+
+    @Override
+    @SuppressWarnings("DuplicatedCode")
+    public void chests$onTick() {
+        World s = this.getWorld();
+        if (!(s instanceof ServerWorld serverWorld)) {
+            return;
+        }
+        BlockState state = serverWorld.getBlockState(this.getPos());
+        BlockOpenableContainer chested = this.chests$getContainer();
+        if (this.chests$isOpen() && chested.chests$isForcedOpened(serverWorld) && !chested.chests$shouldStayOpen(serverWorld)) {
+            this.chests$forceClose();
+        }
+        if (!this.chests$isOpen()) return;
+        if (!state.getProperties().contains(Properties.FACING)) return;
+        if (!serverWorld.getGameRules().getBoolean(ChestsAreChests.getBarrelFall())) return;
+        Direction dir = state.get(Properties.FACING);
+        Box box = Box.of(pos.toCenterPos(), 1 - 0.5 * Math.abs(dir.getOffsetX()),
+                        1 - 0.5 * Math.abs(dir.getOffsetY()), 1 - 0.5 * Math.abs(dir.getOffsetZ()))
+                .offset(.75 * dir.getOffsetX(), .75 * dir.getOffsetY(), .75 * dir.getOffsetZ());
+        if (serverWorld.isSpaceEmpty(box)) {
+            Vec3d outPos = pos.toCenterPos().add(0.75 * dir.getOffsetX(), 0.75 * dir.getOffsetY(), 0.75 * dir.getOffsetZ());
+            Vec3d velocity = new Vec3d(0.05 * dir.getOffsetX(), 0.05 * dir.getOffsetY(), 0.05 * dir.getOffsetZ());
+            this.chests$fallOut(serverWorld, dir, this, outPos, velocity);
+        }
     }
 }

@@ -21,7 +21,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ChestBlock.class)
 public abstract class ExpandedChestBlockMixin {
-    @SuppressWarnings("DuplicatedCode")
     @Inject(
             method = "scheduledTick",
             at = @At(
@@ -33,21 +32,6 @@ public abstract class ExpandedChestBlockMixin {
     private void onScheduledTickBeforeUpdateViewerCountInjector(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
         BlockEntity entity = world.getBlockEntity(pos);
         if (!(entity instanceof FallInContainer fallIn)) return;
-        BlockOpenableContainer c = fallIn.chests$getContainer();
-        if (!(fallIn instanceof BooleanHolder holder)) return;
-        if (fallIn.chests$isOpen() && c.chests$isForcedOpened(world) && !c.chests$shouldStayOpen(world)) {
-            fallIn.chests$forceClose();
-        }
-        if (!fallIn.chests$isOpen()) return;
-        if (!world.getGameRules().getBoolean(ChestsAreChests.getBarrelFall())) return;
-        if (!world.getGameRules().getBoolean(ChestsAreChests.getBarrelFallThrowableSpecial())) return;
-        Direction dir = holder.chests$getBool() ? Direction.DOWN : Direction.UP;
-        Box box = Box.of(pos.toCenterPos(), 1, .5, 1)
-                .offset(.75 * dir.getOffsetX(), .75 * dir.getOffsetY(), .75 * dir.getOffsetZ());
-        if (world.isSpaceEmpty(box)) {
-            Vec3d outPos = pos.toCenterPos().add(0.75 * dir.getOffsetX(), 0.75 * dir.getOffsetY(), 0.75 * dir.getOffsetZ());
-            Vec3d velocity = new Vec3d(0.05 * dir.getOffsetX(), 0.05 * dir.getOffsetY(), 0.05 * dir.getOffsetZ());
-            fallIn.chests$fallOut(world, dir, (Inventory) entity, outPos, velocity);
-        }
+        fallIn.chests$onTick();
     }
 }

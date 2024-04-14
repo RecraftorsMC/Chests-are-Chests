@@ -166,7 +166,7 @@ public interface FallInContainer {
 
     /**
      * Returns the current container's item fall update map. It is only used for the
-     * {@link ChestsAreChests#BARREL_FALL_RULE_ID} function, in order to optimise running fall methods
+     * {@link #chests$fallOut} function, in order to optimise running fall methods
      * multiple times on stacks that wouldn't be affected in the current context.
      * <p>
      * No inner use is needed, and any should be avoided. All use is managed in
@@ -179,6 +179,8 @@ public interface FallInContainer {
     default Map<Integer, Integer> chests$getFallUpdateMap() {
         return new HashMap<>();
     }
+
+    default void chests$onTick() {}
 
     /**
      * Makes items fall out... Or fly out, depending on the items
@@ -193,12 +195,12 @@ public interface FallInContainer {
      */
     @ApiStatus.NonExtendable
     default void chests$fallOut(World world, Direction direction, Inventory inventory, Vec3d pos, Vec3d velocity) {
-        int m = inventory.size();
-        boolean doSpecial = world.getGameRules().getBoolean(ChestsAreChests.getBarrelFallThrowableSpecial());
         Map<Integer, Integer> map = chests$getFallUpdateMap();
         if (map == null) {
             return;
         }
+        int m = inventory.size();
+        boolean doSpecial = world.getGameRules().getBoolean(ChestsAreChests.getBarrelFallThrowableSpecial());
         for (int i = 0; i < m; i++) {
             ItemStack stack = inventory.getStack(i);
             int h = ChestsAreChests.itemStackCustomHash(stack);

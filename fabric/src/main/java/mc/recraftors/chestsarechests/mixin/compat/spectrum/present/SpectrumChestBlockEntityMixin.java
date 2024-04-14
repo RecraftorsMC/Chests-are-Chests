@@ -65,9 +65,14 @@ public abstract class SpectrumChestBlockEntityMixin extends LootableContainerBlo
         return true;
     }
 
-    @SuppressWarnings("DuplicatedCode")
     @Inject(method = "onScheduledTick", at = @At("HEAD"))
     private void tickHeadInjector(CallbackInfo ci) {
+        this.chests$onTick();
+    }
+
+    @Override
+    @SuppressWarnings("DuplicatedCode")
+    public void chests$onTick() {
         ServerWorld w = (ServerWorld) this.getWorld();
         BlockOpenableContainer container = this.chests$getContainer();
         if (this.chests$isOpen() && container.chests$isForcedOpened(w) && !container.chests$shouldStayOpen(w)) {

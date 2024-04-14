@@ -47,6 +47,11 @@ public abstract class BarrelBlockEntityMixin extends LootableContainerBlockEntit
             )
     )
     private void tickPostViewerCountUpdateInjector(CallbackInfo ci) {
+        this.chests$onTick();
+    }
+
+    @Override
+    public void chests$onTick() {
         if (this.getWorld() == null) return;
         ServerWorld w = (ServerWorld) this.getWorld();
         BlockPos pos = this.getPos();
@@ -59,8 +64,8 @@ public abstract class BarrelBlockEntityMixin extends LootableContainerBlockEntit
         if (!state.getProperties().contains(Properties.FACING)) return;
         if (!w.getGameRules().getBoolean(ChestsAreChests.getBarrelFall())) return;
         Direction dir = state.get(Properties.FACING);
-        Box box = Box.of(pos.toCenterPos(), 1 - 0.5 * Math.abs(dir.getOffsetX()),
-                        1 - 0.5 * Math.abs(dir.getOffsetY()), 1 - 0.5 * Math.abs(dir.getOffsetZ()))
+        Box box = Box.of(pos.toCenterPos(), 0.75 - 0.375 * Math.abs(dir.getOffsetX()),
+                        0.75 - 0.375 * Math.abs(dir.getOffsetY()), 0.75 - 0.375 * Math.abs(dir.getOffsetZ()))
                 .offset(.75 * dir.getOffsetX(), .75 * dir.getOffsetY(), .75 * dir.getOffsetZ());
         if (w.isSpaceEmpty(box)) {
             Vec3d outPos = pos.toCenterPos().add(0.75 * dir.getOffsetX(), 0.75 * dir.getOffsetY(), 0.75 * dir.getOffsetZ());
