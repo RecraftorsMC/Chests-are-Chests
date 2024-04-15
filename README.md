@@ -37,6 +37,13 @@ Now the game will feel more natural, even just a little bit, won't you agree?
       * optional entity type tag: `#chests_are_chests:does_not_fall_hatch`
         * specifies what entities shouldn't hatch from spawn eggs on fall
         * includes vanilla bosses by default
+  * Item fall spread
+    * default: none
+    * gamerule: `chests.barrelFall.spreadRadius`
+    * boundaries: cannot be lower than 0 or higher than 0.5
+      (will be brought down to these values if trying to set beyond)
+    * defines a random radius around of the block center at which items can be spawned into the world,
+      for more "natural" item spread. 0 = no spread (default), 0.5 = 0.5 radius circle
 * Making chest lids throw items
   * default: disabled
   * gamerule: `chests.lidFling`
